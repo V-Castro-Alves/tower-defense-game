@@ -124,6 +124,29 @@ func _ready():
 	btn_dev.add_theme_stylebox_override("pressed", style_dev)
 	btn_dev.pressed.connect(_on_dev_pressed)
 	vbox.add_child(btn_dev)
+	
+	# Help / Threat Database button
+	var btn_help = Button.new()
+	btn_help.custom_minimum_size.y = 56
+	btn_help.add_theme_font_size_override("font_size", 16)
+	btn_help.text = "COGNITIVE THREAT DATABASE"
+	
+	var style_help = StyleBoxFlat.new()
+	style_help.bg_color = Color(0.12, 0.15, 0.22, 0.8)
+	style_help.border_width_left = 1
+	style_help.border_width_top = 1
+	style_help.border_width_right = 1
+	style_help.border_width_bottom = 1
+	style_help.border_color = Color("#38bdf8") # Cyan border
+	style_help.corner_radius_top_left = 8
+	style_help.corner_radius_top_right = 8
+	style_help.corner_radius_bottom_left = 8
+	style_help.corner_radius_bottom_right = 8
+	btn_help.add_theme_stylebox_override("normal", style_help)
+	btn_help.add_theme_stylebox_override("hover", style_help)
+	btn_help.add_theme_stylebox_override("pressed", style_help)
+	btn_help.pressed.connect(_on_help_pressed)
+	vbox.add_child(btn_help)
 
 func _on_normal_pressed():
 	# Configure Normal Mode starting states
@@ -144,3 +167,9 @@ func _on_dev_pressed():
 	# Transition Phase to preparing & clear menu overlay
 	GameManager.current_phase = GameManager.GamePhase.WAVE_PREPARATION
 	queue_free()
+
+func _on_help_pressed():
+	# Load Threat Database overlay
+	var db_class = load("res://ui/threat_db.gd")
+	var db = db_class.new()
+	add_child(db)

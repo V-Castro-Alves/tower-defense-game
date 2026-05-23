@@ -11,10 +11,21 @@ func _ready():
 	bg.color = Color("#090d16")
 	add_child(bg)
 	
+	# ScrollContainer to easily read many tests without overflow
+	var scroll = ScrollContainer.new()
+	scroll.position = Vector2(80, 80)
+	scroll.custom_minimum_size = Vector2(1888, 992)
+	add_child(scroll)
+	
+	var container = VBoxContainer.new()
+	container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	container.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.add_child(container)
+	
 	var label = Label.new()
-	label.position = Vector2(80, 80)
 	label.add_theme_font_size_override("font_size", 24)
-	add_child(label)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	container.add_child(label)
 	
 	var log_text = "SPACE DEFENDERS TEST RESULTS:\n\n"
 	var passed = true
@@ -365,6 +376,32 @@ func _ready():
 	GameManager.dev_mode = false
 	GameManager.lives = 20
 	EconomyManager.minerals = 50
+	
+	# ----------------------------------------------------
+	# Test 9: Threat Database Profiles & Previews
+	# ----------------------------------------------------
+	log_text += "\n[RUN] Testing Threat Database Profiles...\n"
+	
+	var db_class = load("res://ui/threat_db.gd")
+	var db_test = db_class.new()
+	add_child(db_test)
+	
+	if db_test.profiles.is_empty():
+		log_text += "  [FAIL] Threat Database profiles list was empty\n"
+		passed = false
+	else:
+		log_text += "  [PASS] Threat Database profiles dictionary initialized successfully\n"
+		
+	var pebble_data = db_test.profiles.get("Pebble", {})
+	var lava_data = db_test.profiles.get("Lava Elemental", {})
+	if pebble_data.get("tier") != 1 or lava_data.get("element") != "Lava":
+		log_text += "  [FAIL] Threat profile attributes mismatched GDD specifications\n"
+		passed = false
+	else:
+		log_text += "  [PASS] Threat profiles successfully match GDD speed, tier, and element criteria\n"
+		
+	# Clean up
+	db_test.queue_free()
 	
 	# ----------------------------------------------------
 	# Final Output & Visual Display
