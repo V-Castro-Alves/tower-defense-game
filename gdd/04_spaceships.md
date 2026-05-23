@@ -19,7 +19,7 @@
 Placed ships can be dynamically relocated to any valid tile at any time.
 
 - **Cost**: **15% of the ship's base cost** (rounded up, upgrade costs are not included in this calculation).
-- Repositioning is fully available during waves as well as during planning phases.
+- Repositioning is fully available during rounds as well as during planning phases.
 
 ### Repositioning Fee Sheet
 
@@ -39,7 +39,7 @@ Placed ships can be dynamically relocated to any valid tile at any time.
 
 - Clicking a placed ship opens its **Ship Management Panel**.
 - Pressing the **Sell** button yields a refund equal to **70% of total ship value** (base cost + all purchased upgrades), rounded down.
-- Selling can be performed during active waves or planning phases.
+- Selling can be performed during active rounds or planning phases.
 
 ---
 
@@ -149,7 +149,7 @@ The Pulse Beam's kinetic blast interacts uniquely with variants and elementals, 
 |---------|---------------------------|----------------------|
 | **Hard Crust** | ✅ **Full Damage** | Shearing physical force shatters high-density rock. |
 | **Ring Belt** | ❌ **Blocked (0 Damage)** | Orbiting debris dispersion absorbs and diffuses kinetic energy. |
-| **Magnetic Core** | ✅ **Damage + 2s Regen Pause** | Impact shock waves disrupt the local magnetic field briefly. |
+| **Magnetic Core** | ✅ **Damage + 2s Regen Pause** | Impact shock rounds disrupt the local magnetic field briefly. |
 | **Blinding Tail** | ✅ **Unaffected** | Operates via spatial density scanning, not optical tracking. |
 
 ### Elemental Interactions

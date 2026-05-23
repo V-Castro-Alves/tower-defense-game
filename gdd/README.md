@@ -16,8 +16,8 @@ Below is the directory map of the modular GDD:
 ### ⚙️ [02. Core Mechanics](02_core_mechanics.md)
 *High-level match rules, player health, and global economy.*
 - **Lives System**: Penalties on leak
-- **Economy**: Minerals earnings, costs, and wave bonuses
-- **Wave Control**: Launch mechanisms
+- **Economy**: Minerals earnings, costs, and round bonuses
+- **Round Control**: Launch mechanisms
 
 ### ☄️ [03. Asteroids & Threat Registry](03_asteroids.md)
 *The physical division, armor, and elementals of our targets.*
@@ -40,9 +40,9 @@ Below is the directory map of the modular GDD:
 - Z-Path with Loop Layout & Choke Points
 - Tile Classification (`PATH`, `BUILDABLE`, `BLOCKED`)
 
-### 🌊 [06. Wave System](06_wave_system.md)
-*Wave configurations, pacing, and mineral payouts.*
-- Wave-by-Wave Composition Table (Waves 1-10)
+### 🌊 [06. Round System](06_round_system.md)
+*Round configurations, pacing, and mineral payouts.*
+- Round-by-Round Composition Table (Rounds 1-10)
 - Economic Pacing & Balanced Budgeting
 
 ### 🖥️ [07. UI & Input](07_ui_input.md)
@@ -56,12 +56,12 @@ Below is the directory map of the modular GDD:
 *Engine implementation plans, directories, autoloads, resources, and signals.*
 - Godot 4 & GDScript integration
 - Project Directory Tree
-- Autoload Managers (`GameManager`, `WaveManager`, `EconomyManager`)
+- Autoload Managers (`GameManager`, `RoundManager`, `EconomyManager`)
 - Signal Map & Event-driven Architecture
-- Core Data Resources (`ShipData`, `AsteroidData`, `WaveData` GDScript templates)
+- Core Data Resources (`ShipData`, `AsteroidData`, `RoundData` GDScript templates)
 
 ### 🧪 [09. TDD Test Plan](09_tdd_test_plan.md)
-*Godot Unit Test (GUT) specs for both units and full wave integrations.*
+*Godot Unit Test (GUT) specs for both units and full round integrations.*
 - Asteroid Splitting & Regeneration tests
 - Variant Blockage & Pierce counters tests
 - Elemental Laser / Kinetic Chain reaction tests
@@ -69,7 +69,7 @@ Below is the directory map of the modular GDD:
 - Targeting modes & Drone distribution tests
 - Pulse Beam cluster auto-rotation and Kinetic tests
 - Gravity Well freeze durations, support rules, and variant bypass tests
-- Wave Progression & Integration simulations
+- Round Progression & Integration simulations
 
 ### 🚀 [10. Roadmap & Questions](10_roadmap_and_questions.md)
 *Development lifecycle phases, open questions, and future expansion scope.*

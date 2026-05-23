@@ -155,7 +155,7 @@ func _on_normal_pressed():
 	EconomyManager.minerals = 50
 	
 	# Transition Phase to preparing & clear menu overlay
-	GameManager.current_phase = GameManager.GamePhase.WAVE_PREPARATION
+	GameManager.current_phase = GameManager.GamePhase.ROUND_PREPARATION
 	queue_free()
 
 func _on_dev_pressed():
@@ -165,7 +165,7 @@ func _on_dev_pressed():
 	EconomyManager.minerals = 99999
 	
 	# Transition Phase to preparing & clear menu overlay
-	GameManager.current_phase = GameManager.GamePhase.WAVE_PREPARATION
+	GameManager.current_phase = GameManager.GamePhase.ROUND_PREPARATION
 	queue_free()
 
 func _on_help_pressed():

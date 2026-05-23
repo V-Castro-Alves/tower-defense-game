@@ -10,7 +10,7 @@ The game's HUD is permanently visible, framing the game viewport.
 
 ```
  ┌────────────────────────────────────────────────────────┐
- │ ❤️ Lives: 20/20          💎 Minerals: 50      🌊 Wave: 3/10 │
+ │ ❤️ Lives: 20/20          💎 Minerals: 50      🌊 Round: 3/10 │
  │                                            ⚡ Speed: [1x] │
  │                                                        │
  │                                                        │
@@ -27,10 +27,10 @@ The game's HUD is permanently visible, framing the game viewport.
 
 - **❤️ Lives Counter** (Top-Left): Displays current/max lives remaining (e.g., `20 / 20`).
 - **💎 Mineral Counter** (Top-Center): Displays the player's current mineral balance (e.g., `💎 50`). Updates dynamically on purchases, sales, and Pebble destructions.
-- **🌊 Wave Counter** (Top-Right): Displays active wave status (e.g., `Wave 3 / 10`).
-- **⚡ Speed Toggle** (Top-Right, below wave): Button to adjust active simulation speed. Cycles between `1x` and `2x` speed.
+- **🌊 Round Counter** (Top-Right): Displays active round status (e.g., `Round 3 / 10`).
+- **⚡ Speed Toggle** (Top-Right, below round): Button to adjust active simulation speed. Cycles between `1x` and `2x` speed.
 - **🚀 Ship Shop Bar** (Bottom-Center): Horizontal strip displaying available ships with their mineral prices. Hovering displays basic stats (range, damage, shot type).
-- **🟢 Launch Wave Button** (Bottom-Right): Starts the wave. Highlights green when ready, and turns gray/disabled during active wave spawning.
+- **🟢 Launch Round Button** (Bottom-Right): Starts the round. Highlights green when ready, and turns gray/disabled during active round spawning.
 
 ---
 

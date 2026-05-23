@@ -8,8 +8,8 @@ signal phase_changed(new_phase)
 
 enum GamePhase {
 	PRE_GAME,
-	WAVE_PREPARATION,
-	WAVE_ACTIVE,
+	ROUND_PREPARATION,
+	ROUND_ACTIVE,
 	GAME_OVER,
 	GAME_WON
 }

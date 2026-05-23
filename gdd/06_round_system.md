@@ -1,22 +1,22 @@
 # SPACE DEFENDERS
-## 06. Wave System
+## 06. Round System
 **Version 0.5 | Prototype Phase**
 
 ---
 
 ## 6.1 Spawning Rules & Composition
 
-Space Defenders is balanced over a fixed **10-Wave Campaign**. 
+Space Defenders is balanced over a fixed **10-Round Campaign**. 
 
-- **Spawning Pacing Rule**: Within any individual wave group, asteroids spawn with a **"small clusters first, big finishers last"** structure. This forces the players to deal with swift, splitting groups before handling heavy, slow-moving boss-level threats.
-- **Dynamic Speed Scales**: Asteroids spawn at rates determined by the active wave settings.
-- **Active State Lock**: Spawning is locked to the wave's preset speed. The HUD's "Launch Wave" button remains disabled until every single asteroid and splitting fragment has been fully neutralized or leaked.
+- **Spawning Pacing Rule**: Within any individual round group, asteroids spawn with a **"small clusters first, big finishers last"** structure. This forces the players to deal with swift, splitting groups before handling heavy, slow-moving boss-level threats.
+- **Dynamic Speed Scales**: Asteroids spawn at rates determined by the active round settings.
+- **Active State Lock**: Spawning is locked to the round's preset speed. The HUD's "Launch Round" button remains disabled until every single asteroid and splitting fragment has been fully neutralized or leaked.
 
 ---
 
-## 6.2 The 10-Wave Balance Table
+## 6.2 The 10-Round Balance Table
 
-| Wave | Spawn Composition | Spawn Spurt Order | Spawn Interval | Minerals Available (Clear) | Perfect Clear Bonus |
+| Round | Spawn Composition | Spawn Spurt Order | Spawn Interval | Minerals Available (Clear) | Perfect Clear Bonus |
 |------|-------------------|-------------------|----------------|---------------------------|---------------------|
 | **1** | 10 Pebbles | 10P | 1.0s | 10 Minerals | +5 Minerals |
 | **2** | 8 Pebbles + 2 Boulders | 4P → 4P → 2B | 1.0s | 16 Minerals | +10 Minerals |
@@ -43,9 +43,9 @@ Space Defenders is balanced over a fixed **10-Wave Campaign**.
 The game's difficulty scales to require optimized purchases at every stage of the campaign.
 
 ```
-                  WAVES 1-3                          WAVES 4-6                         WAVES 7-10
+                  ROUNDS 1-3                          ROUNDS 4-6                         ROUNDS 7-10
              [Tight Early Game]                 [Mid-Game Expansion]                [Late-Game Siege]
-           - Start Minerals: 50              - Income: ~40-56 / wave            - Income: ~60-96 / wave
+           - Start Minerals: 50              - Income: ~40-56 / round            - Income: ~60-96 / round
            - Focus: Basic coverage           - Focus: AoE & Upgrades            - Focus: Behemoth counters
            - Recommended: 2x Scouts          - Recommended: Laser Frigate,      - Recommended: Ion Cannons,
                                                Missile Cruiser, Pulse Beams,      Drone Carriers, Gravity Wells,
@@ -54,14 +54,14 @@ The game's difficulty scales to require optimized purchases at every stage of th
 
 ### Stage Breakdown
 
-#### 1. Waves 1–3: The Starting Squeeze
+#### 1. Rounds 1–3: The Starting Squeeze
 - **Financial Status**: Extremely tight. Reliance on starting **50 minerals**.
 - **Tactical Strategy**: Place basic Scout ships (20 minerals each) near the entry points. Keep a small mineral buffer for early splitting response.
 
-#### 2. Waves 4–6: The Fleet Expands
-- **Financial Status**: Moderate. Mineral availability scales to **40–56 minerals** per wave.
+#### 2. Rounds 4–6: The Fleet Expands
+- **Financial Status**: Moderate. Mineral availability scales to **40–56 minerals** per round.
 - **Tactical Strategy**: Deploy Laser Frigates (35 minerals) and Missile Cruisers (45 minerals) to manage the boulder clusters. Purchase early **Hot/Cold Laser upgrades** on active Scouts to prepare for elemental threats.
 
-#### 3. Waves 7–10: High Orbit Defenses
-- **Financial Status**: Flush. Heavy earnings of **60–96 minerals** per wave.
+#### 3. Rounds 7–10: High Orbit Defenses
+- **Financial Status**: Flush. Heavy earnings of **60–96 minerals** per round.
 - **Tactical Strategy**: Deploy the ultimate single-target **Ion Cannons** (60 minerals) to break Giants. Build **Gravity Wells** (80 minerals) at the central choke loop. Purchase **Optical Targeting** upgrades on Scouts to counter Blinding Tails.

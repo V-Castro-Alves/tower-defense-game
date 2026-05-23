@@ -263,7 +263,7 @@ func _get_ship_cost(type: String) -> int:
 		"Gravity Well": return 80
 	return 0
 
-# Called by WaveManager
+# Called by RoundManager
 func spawn_asteroid(tier: int, custom_progress: float, custom_variant: String = "None", custom_elemental: String = "None"):
 	var asteroid_scene = load("res://entities/asteroids/asteroid.tscn")
 	var a = asteroid_scene.instantiate()

@@ -14,7 +14,7 @@ The development of Space Defenders is structured into seven distinct phases to e
 ├─────────────────────────────────────────────────────────────────────────┤
 │ PHASE 2: Godot 4 Prototype (Basic map, spawner, Scout, Pebble)    [⏳]  │
 ├─────────────────────────────────────────────────────────────────────────┤
-│ PHASE 3: Core Systems (All ships/tiers, economy, waves, GUT tests)[⏳]  │
+│ PHASE 3: Core Systems (All ships/tiers, economy, rounds, GUT tests)[⏳]  │
 ├─────────────────────────────────────────────────────────────────────────┤
 │ PHASE 4: Content Balancing (Upgrade trees, laser pricing, tuning) [⏳]  │
 ├─────────────────────────────────────────────────────────────────────────┤
@@ -43,8 +43,8 @@ These items are currently open and scheduled to be resolved in upcoming developm
 | 🛸 **Ships** | Minimum buffer distance rules (can ships be built directly adjacent?). | **Phase 3** (Core) |
 | 🛸 **Ships** | Gravity Well recharge HUD display (should the timer be visible on the ship?). | **Phase 3** (Core) |
 | 🛸 **Ships** | Pulse Beam targeting preview (should the cone direction show on selection?). | **Phase 3** (Core) |
-| 🌊 **Waves** | Precise delay timings between different spawn cohorts vs intra-cohort intervals. | **Phase 3** (Core) |
-| 🌊 **Waves** | Variant and elemental spawning percentages per wave (exact spawn chances). | **Phase 4** (Content) |
+| 🌊 **Rounds** | Precise delay timings between different spawn cohorts vs intra-cohort intervals. | **Phase 3** (Core) |
+| 🌊 **Rounds** | Variant and elemental spawning percentages per round (exact spawn chances). | **Phase 4** (Content) |
 | ☄️ **Variants** | Visual designs and shaders for variants (comet tail VFX, ring belt sprites). | **Phase 5** (Art) |
 | ❄️ **Elementals**| Ice shrapnel burst visual effects (does it affect ships visually?). | **Phase 5** (Art) |
 
@@ -55,7 +55,7 @@ These items are currently open and scheduled to be resolved in upcoming developm
 The following concepts are planned for post-prototype development:
 
 - **Additional Maps**: Interactive environmental hazards (e.g., black holes that warp projectiles, solar storms that temporarily disable ships).
-- **Special Wave Types**:
+- **Special Round Types**:
   - **Comet Showers**: Ultra-fast, low-HP streaks that bypass standard path targeting.
   - **Asteroid Belts**: Inundations of small debris that swarm and overwhelm single-target setups.
   - **Boss Behemoths**: Asteroids with unique behaviors, such as spawning smaller asteroids as shields or split-immune structures.

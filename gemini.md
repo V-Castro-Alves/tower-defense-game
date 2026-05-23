@@ -12,9 +12,9 @@ Welcome to the **Space Defenders** developer guidelines. This document is design
   - Height Override: `720`
   - Stretch Mode: `canvas_items` (Aspect: `expand`)
 - **Autoloads**: 
-  - `GameManager`: Controls game states (Active, Repositioning, Paused) and wave speed cycles (1x, 2x, 3x).
+  - `GameManager`: Controls game states (Active, Repositioning, Paused) and round speed cycles (1x, 2x, 3x).
   - `EconomyManager`: Centralizes all mineral, refund, and fee logic.
-  - `WaveManager`: Stores compositions for all 10 waves.
+  - `RoundManager`: Stores compositions for all 10 rounds.
 - **Freeform Ship Placement**: Ship placement operates on smooth continuous (float) coordinates rather than a grid:
   - **Path Clearance**: Ships must clear the path center line by **48 pixels** (`pos.distance_to(closest_path_point) >= 48.0`).
   - **Overlap Prevention**: Ships cannot be placed closer than **48 pixels center-to-center** from other ships (`pos.distance_to(other_ship) >= 48.0`).
@@ -53,7 +53,7 @@ We added explicit automated regression tests for every single error encountered 
 - **Resolution**: Converted all division calculations in HUD layout to floats (`2048.0 / 2.0 - 1360.0 / 2.0`).
 
 ### 3. Array Type Assignment Error
-- **Error**: `start_wave: Trying to assign an array of type "Array" to a variable of type "Array[int]" @ wave_manager.gd:66`
+- **Error**: `start_round: Trying to assign an array of type "Array" to a variable of type "Array[int]" @ round_manager.gd:66`
 - **Root Cause**: Godot 4 typed arrays (`Array[int]`) reject direct assignments of generic untyped `Array` values parsed from JSON configurations.
 - **Resolution**: Switched to a type-safe conversion loop that appends items using explicit casting (`s as int`).
 - **Regression Test**: Added **Regression 1** in `test_runner.gd` to verify loading configuration spawns into a typed `Array[int]`.
@@ -128,4 +128,16 @@ Play the `test_runner.tscn` scene in Godot and ensure that your new test passes 
 
 ---
 
+## 📚 Documentation Maintenance Guidelines
+
+Whenever you introduce architectural refactorings, add new features, adjust design parameters (such as changing the game terminology, e.g., "Rounds" to "Rounds"), or fix bugs, you **must** update the corresponding documentation files:
+- **GDD Files**: Keep the modular Game Design Documents located in the [gdd/](file:///wsl.localhost/Ubuntu/home/vitor/projects/games/tower-defense/gdd) folder (e.g., `01_game_overview.md`, `06_round_system.md`, etc.) aligned with the current gameplay specification.
+- **Project README**: Make sure the root [README.md](file:///wsl.localhost/Ubuntu/home/vitor/projects/games/tower-defense/README.md) reflects high-level feature sets and configuration terms correctly.
+- **Developer Guide**: Keep this [gemini.md](file:///wsl.localhost/Ubuntu/home/vitor/projects/games/tower-defense/gemini.md) guide updated with changes to window sizes, placement math buffers, and regression test rules.
+
+Always double-check that filenames are renamed accordingly if a core concept changes (e.g., renaming `06_round_system.md` to `06_round_system.md`).
+
+---
+
 *Keep the codebase robust, clean, and bug-free!* 🌌
+

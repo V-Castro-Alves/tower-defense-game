@@ -2,7 +2,7 @@ extends CanvasLayer
 
 var lives_label: Label
 var minerals_label: Label
-var wave_label: Label
+var round_label: Label
 var launch_btn: Button
 var shop_buttons: Dictionary = {}
 
@@ -73,12 +73,12 @@ func _ready():
 	minerals_label.add_theme_color_override("font_color", Color("#06b6d4")) # Cyan
 	resources_hbox.add_child(minerals_label)
 	
-	# Wave Label (Directly underneath resources, text only)
-	wave_label = Label.new()
-	wave_label.text = "WAVE: 0 / 10"
-	wave_label.add_theme_font_size_override("font_size", 22)
-	wave_label.add_theme_color_override("font_color", Color("#f97316")) # Orange
-	status_vbox.add_child(wave_label)
+	# Round Label (Directly underneath resources, text only)
+	round_label = Label.new()
+	round_label.text = "ROUND: 0 / 10"
+	round_label.add_theme_font_size_override("font_size", 22)
+	round_label.add_theme_color_override("font_color", Color("#f97316")) # Orange
+	status_vbox.add_child(round_label)
 	
 	# Small separator between status and shop list
 	status_vbox.add_child(HSeparator.new())
@@ -144,16 +144,16 @@ func _ready():
 		
 	# --- Bottom Section: Fixed Launch/Speed Up Button ---
 	launch_btn = Button.new()
-	launch_btn.text = "LAUNCH WAVE 1"
+	launch_btn.text = "START ROUND 1"
 	launch_btn.custom_minimum_size = Vector2(280, 88)
 	launch_btn.add_theme_font_size_override("font_size", 22)
 	
 	# Handles dynamic callback checking phase state
 	launch_btn.pressed.connect(func():
-		if GameManager.current_phase == GameManager.GamePhase.WAVE_ACTIVE:
+		if GameManager.current_phase == GameManager.GamePhase.ROUND_ACTIVE:
 			GameManager.toggle_speed()
 		else:
-			WaveManager.start_wave()
+			RoundManager.start_round()
 	)
 	main_vbox.add_child(launch_btn)
 	
@@ -167,9 +167,9 @@ func _ready():
 	GameManager.speed_changed.connect(_on_speed_changed)
 	GameManager.phase_changed.connect(_on_phase_changed)
 	EconomyManager.minerals_changed.connect(_on_minerals_changed)
-	WaveManager.wave_changed.connect(_on_wave_changed)
-	WaveManager.wave_started.connect(_on_wave_started)
-	WaveManager.wave_completed.connect(_on_wave_completed)
+	RoundManager.round_changed.connect(_on_round_changed)
+	RoundManager.round_started.connect(_on_round_started)
+	RoundManager.round_completed.connect(_on_round_completed)
 	
 	# Initial updates
 	_update_hud()
@@ -190,10 +190,10 @@ func _update_hud():
 		lives_label.text = "❤️ %d" % GameManager.lives
 		minerals_label.text = "💎 %d" % EconomyManager.minerals
 		
-	wave_label.text = "WAVE: %d / 10" % WaveManager.current_wave
+	round_label.text = "ROUND: %d / 10" % RoundManager.current_round
 	
 	# Launch/Speed toggle state
-	if GameManager.current_phase == GameManager.GamePhase.WAVE_ACTIVE:
+	if GameManager.current_phase == GameManager.GamePhase.ROUND_ACTIVE:
 		launch_btn.disabled = false
 		launch_btn.text = "SPEED: %.0fx" % GameManager.speed_multiplier
 		
@@ -231,7 +231,7 @@ func _update_hud():
 		
 	else:
 		launch_btn.disabled = false
-		launch_btn.text = "LAUNCH WAVE %d" % (WaveManager.current_wave + 1)
+		launch_btn.text = "START ROUND %d" % (RoundManager.current_round + 1)
 		
 		var style_launch = StyleBoxFlat.new()
 		style_launch.bg_color = Color("#16a34a") # Green
@@ -273,13 +273,13 @@ func _on_minerals_changed(_val):
 	_update_hud()
 	_update_shop_buttons()
 
-func _on_wave_changed(_val):
+func _on_round_changed(_val):
 	_update_hud()
 
-func _on_wave_started(_val):
+func _on_round_started(_val):
 	_update_hud()
 
-func _on_wave_completed(_val, _no_leak):
+func _on_round_completed(_val, _no_leak):
 	_update_hud()
 
 func _on_phase_changed(_val):

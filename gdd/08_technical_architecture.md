@@ -41,7 +41,7 @@ space_defenders/
 ├── scripts/
 │   ├── managers/
 │   │   ├── game_manager.gd     # Global game state coordinator (Autoload)
-│   │   ├── wave_manager.gd     # Wave spawn timelines and states (Autoload)
+│   │   ├── round_manager.gd     # Round spawn timelines and states (Autoload)
 │   │   └── economy_manager.gd  # Resource, life, and transaction manager (Autoload)
 │   ├── entities/
 │   │   ├── asteroid_base.gd
@@ -55,7 +55,7 @@ space_defenders/
 │       └── ship_panel.gd
 ├── resources/
 │   ├── ship_data.tres          # Tres database defining ship baseline parameters
-│   └── wave_data.tres          # Tres database defining waves 1-10 configs
+│   └── round_data.tres          # Tres database defining rounds 1-10 configs
 ├── assets/
 │   ├── sprites/                # 2D raster sprites
 │   └── sounds/                 # Sound effects
@@ -66,9 +66,9 @@ space_defenders/
     │   ├── test_elemental_interactions.gd
     │   ├── test_economy.gd
     │   ├── test_targeting.gd
-    │   └── test_wave_manager.gd
+    │   └── test_round_manager.gd
     └── integration/
-        ├── test_wave_run.gd
+        ├── test_round_run.gd
         └── test_full_game.gd
 ```
 
@@ -80,8 +80,8 @@ We employ three singletons to manage high-level game states, allowing entities t
 
 | Manager | Script Reference | Direct Responsibilities |
 |---------|------------------|-------------------------|
-| **`GameManager`** | `game_manager.gd` | Tracks core states (PLANNING, WAVE_ACTIVE, GAME_OVER, VICTORY); handles life totals and matches. |
-| **`WaveManager`** | `wave_manager.gd` | Spawns wave cohorts based on loaded `WaveData` configurations; monitors path progression. |
+| **`GameManager`** | `game_manager.gd` | Tracks core states (PLANNING, ROUND_ACTIVE, GAME_OVER, VICTORY); handles life totals and matches. |
+| **`RoundManager`** | `round_manager.gd` | Spawns round cohorts based on loaded `RoundData` configurations; monitors path progression. |
 | **`EconomyManager`** | `economy_manager.gd` | Balances wallets, checks affordability, handles reposition fees, upgrades, and sell transactions. |
 
 ---
@@ -101,8 +101,8 @@ To prevent tightly coupled dependencies, communication between systems is handle
 | `mineral_earned` | `EconomyManager` | `HUD` | `amount: int` |
 | `mineral_spent` | `EconomyManager` | `HUD` | `amount: int` |
 | `life_lost` | `GameManager` | `HUD` | `amount: int` |
-| `wave_started` | `WaveManager` | `HUD`, `GameManager` | `wave_number: int` |
-| `wave_completed` | `WaveManager` | `EconomyManager`, `HUD` | `wave_number: int, no_leak: bool` |
+| `round_started` | `RoundManager` | `HUD`, `GameManager` | `round_number: int` |
+| `round_completed` | `RoundManager` | `EconomyManager`, `HUD` | `round_number: int, no_leak: bool` |
 | `game_over` | `GameManager` | UI overlay | — |
 | `game_won` | `GameManager` | UI overlay | — |
 | `ship_placed` | Placement System | `EconomyManager`, `Map` | `ship_type: String, pos: Vector2` |
@@ -114,7 +114,7 @@ To prevent tightly coupled dependencies, communication between systems is handle
 
 ## 8.5 Core Data Resources (GDScript Templates)
 
-Using resources allows us to customize ship and wave parameters inside the Godot Inspector without touching code.
+Using resources allows us to customize ship and round parameters inside the Godot Inspector without touching code.
 
 ### `ShipData` Resource (`scripts/resources/ship_data.gd`)
 ```gdscript
@@ -155,13 +155,13 @@ extends Resource
 @export var elemental: String           # "", "ice", "lava"
 ```
 
-### `WaveData` Resource (`scripts/resources/wave_data.gd`)
+### `RoundData` Resource (`scripts/resources/round_data.gd`)
 ```gdscript
-class_name WaveData
+class_name RoundData
 extends Resource
 
-@export var wave_number: int
+@export var round_number: int
 @export var spawn_groups: Array         # Array of Dictionaries: [{"type": "Pebble", "count": 10}]
 @export var spawn_interval: float       # Time between spawns
-@export var no_leak_bonus: int          # wave_number * 5
+@export var no_leak_bonus: int          # round_number * 5
 ```

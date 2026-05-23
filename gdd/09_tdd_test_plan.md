@@ -53,8 +53,8 @@ This document outlines the Test-Driven Development (TDD) plan for Space Defender
 - [ ] Selling a Scout with no upgrades returns exactly **14 minerals** (70% of 20, rounded down).
 - [ ] Selling a Scout with 20 minerals in upgrades purchased returns exactly **28 minerals** (70% of 40).
 - [ ] Repositioning a Scout costs exactly **3 minerals** (15% of 20, rounded up).
-- [ ] Perfect Wave Clear (no-leak) bonus on Wave 4 awards exactly **20 minerals**.
-- [ ] Perfect Wave Clear (no-leak) bonus on Wave 10 awards exactly **50 minerals**.
+- [ ] Perfect Round Clear (no-leak) bonus on Round 4 awards exactly **20 minerals**.
+- [ ] Perfect Round Clear (no-leak) bonus on Round 10 awards exactly **50 minerals**.
 
 ### 🧪 `test_targeting.gd` (Target Selection Logic)
 - [ ] Ships set to **First** target the asteroid with the highest path progress.
@@ -83,7 +83,7 @@ This document outlines the Test-Driven Development (TDD) plan for Space Defender
 - [ ] The Gravity Well freezes all asteroids inside its range circle on activation.
 - [ ] The freeze duration scales by tier: Pebbles (4.0s), Boulders (3.0s), Meteors (2.0s), Giants (1.5s), Planet Chunks (1.0s).
 - [ ] Frozen asteroids resume normal movement as soon as their individual freeze timers expire.
-- [ ] In a mixed wave, each frozen asteroid thaws independently at its own tier-based time.
+- [ ] In a mixed round, each frozen asteroid thaws independently at its own tier-based time.
 - [ ] The Gravity Well deals **0 damage** to all targets.
 - [ ] The Gravity Well enters a **6.0-second recharge** after firing, during which it is completely inactive.
 - [ ] The gravitational freeze bypasses Hard Crust and freezes targets normally.
@@ -91,26 +91,26 @@ This document outlines the Test-Driven Development (TDD) plan for Space Defender
 - [ ] A Magnetic Core asteroid has its regeneration rate halved to **0.25 HP/s** while frozen by the Gravity Well.
 - [ ] A Blinding Tail asteroid is frozen normally. Other ships still cannot target it unless equipped with Optical Targeting.
 
-### 🧪 `test_wave_manager.gd` (Cohort Timeline Control)
-- [ ] Wave 1 spawns exactly 10 Pebbles at 1.0-second intervals.
-- [ ] Wave 2 spawns 8 Pebbles, then 2 Boulders (small first, big last) at 1.0-second intervals.
-- [ ] Wave 10 spawns Giants before spawning the Planet Chunk.
-- [ ] Spawner intervals match wave-specific speeds (0.6s to 1.0s).
-- [ ] The `wave_completed` signal is emitted only after all spawned asteroids and split fragments are cleared.
-- [ ] The `wave_completed` signal's payload contains the correct `no_leak` boolean value.
-- [ ] The Launch Wave button is re-enabled in the HUD as soon as a wave is fully cleared.
+### 🧪 `test_round_manager.gd` (Cohort Timeline Control)
+- [ ] Round 1 spawns exactly 10 Pebbles at 1.0-second intervals.
+- [ ] Round 2 spawns 8 Pebbles, then 2 Boulders (small first, big last) at 1.0-second intervals.
+- [ ] Round 10 spawns Giants before spawning the Planet Chunk.
+- [ ] Spawner intervals match round-specific speeds (0.6s to 1.0s).
+- [ ] The `round_completed` signal is emitted only after all spawned asteroids and split fragments are cleared.
+- [ ] The `round_completed` signal's payload contains the correct `no_leak` boolean value.
+- [ ] The Launch Round button is re-enabled in the HUD as soon as a round is fully cleared.
 
 ---
 
 ## 9.2 Integration Tests
 
-### 🧪 `test_wave_run.gd` (Active Simulation Loop)
-- [ ] **Perfect Wave 1 Simulation**: Spawns and destroys 10 Pebbles. Awards 10 minerals mid-wave + a perfect clear bonus. Fires `wave_completed(1, true)`.
-- [ ] **Wave 1 Leak Simulation**: Spawns 10 Pebbles. 9 are destroyed, 1 leaks. Lives decrease by 1, wave completes, and no bonus minerals are awarded. Fires `wave_completed(1, false)`.
-- [ ] **Perfect Wave 4 Simulation**: Spawns and destroys 10 Boulders. Awards exactly 40 minerals total upon full cleanup.
-- [ ] **Planet Chunk Leak Simulation (Wave 10)**: Allowing a Planet Chunk to leak reduces lives by 32, triggering a `game_over` state (since 32 lives lost > 20 starting lives).
+### 🧪 `test_round_run.gd` (Active Simulation Loop)
+- [ ] **Perfect Round 1 Simulation**: Spawns and destroys 10 Pebbles. Awards 10 minerals mid-round + a perfect clear bonus. Fires `round_completed(1, true)`.
+- [ ] **Round 1 Leak Simulation**: Spawns 10 Pebbles. 9 are destroyed, 1 leaks. Lives decrease by 1, round completes, and no bonus minerals are awarded. Fires `round_completed(1, false)`.
+- [ ] **Perfect Round 4 Simulation**: Spawns and destroys 10 Boulders. Awards exactly 40 minerals total upon full cleanup.
+- [ ] **Planet Chunk Leak Simulation (Round 10)**: Allowing a Planet Chunk to leak reduces lives by 32, triggering a `game_over` state (since 32 lives lost > 20 starting lives).
 
 ### 🧪 `test_full_game.gd` (Campaign Run)
-- [ ] Completing all 10 waves with at least 1 life remaining triggers the `game_won` signal.
-- [ ] Lives reaching 0 mid-wave halts spawning and triggers the `game_over` signal.
-- [ ] A perfect campaign (completing all 10 waves with zero leaks) awards exactly **783 minerals** total (508 base + 275 bonus minerals).
+- [ ] Completing all 10 rounds with at least 1 life remaining triggers the `game_won` signal.
+- [ ] Lives reaching 0 mid-round halts spawning and triggers the `game_over` signal.
+- [ ] A perfect campaign (completing all 10 rounds with zero leaks) awards exactly **783 minerals** total (508 base + 275 bonus minerals).

@@ -36,7 +36,7 @@ func _ready():
 	area.add_child(collision_shape)
 	
 	setup_tier(current_tier)
-	WaveManager.register_asteroid_spawn()
+	RoundManager.register_asteroid_spawn()
 
 func setup_tier(t: int):
 	current_tier = t
@@ -141,8 +141,8 @@ func _process(delta):
 	if progress_ratio >= 1.0:
 		# Leak asteroid
 		GameManager.lose_lives(lives_on_leak)
-		WaveManager.register_leak()
-		WaveManager.register_asteroid_removed()
+		RoundManager.register_leak()
+		RoundManager.register_asteroid_removed()
 		queue_free()
 
 func apply_freeze(duration: float):
@@ -232,7 +232,7 @@ func take_damage(amount: int, shot_type: String = "Weak"):
 				# Destroys bigger ones completely (adds full equivalent value)
 				EconomyManager.add_minerals(get_mineral_value(current_tier))
 				
-			WaveManager.register_asteroid_removed()
+			RoundManager.register_asteroid_removed()
 			queue_free()
 		else:
 			# Boulder splits award 2 minerals
@@ -245,7 +245,7 @@ func take_damage(amount: int, shot_type: String = "Weak"):
 				main.call_deferred("spawn_asteroid", new_tier, progress + 8.0, variant, elemental_type)
 			
 			# Remove parent
-			WaveManager.register_asteroid_removed()
+			RoundManager.register_asteroid_removed()
 			queue_free()
 
 func get_mineral_value(tier: int) -> int:

@@ -1,22 +1,22 @@
 extends Node
 
-signal wave_changed(current_wave)
-signal wave_started(current_wave)
-signal wave_completed(current_wave, no_leak)
+signal round_changed(current_round)
+signal round_started(current_round)
+signal round_completed(current_round, no_leak)
 
-const TOTAL_WAVES: int = 10
+const TOTAL_ROUNDS: int = 10
 
-var current_wave: int = 0 : set = set_wave
-var wave_active: bool = false
+var current_round: int = 0 : set = set_round
+var round_active: bool = false
 var spawn_timer: Timer
 var spawn_list: Array = []
 var spawn_interval: float = 1.0
 
 var active_asteroids: int = 0
-var leaks_this_wave: int = 0
+var leaks_this_round: int = 0
 
-# Wave structures mapping wave number to details: [spawn_list, interval]
-var wave_definitions: Dictionary = {
+# Round structures mapping round number to details: [spawn_list, interval]
+var round_definitions: Dictionary = {
 	1: { "spawns": [1,1,1,1,1, 1,1,1,1,1], "interval": 1.5 }, # 10 Pebbles (P)
 	2: { "spawns": [1,1,1,1, 1,1,1,1, 2,2], "interval": 1.3 }, # 4P, 4P, 2 Boulders (B)
 	3: { "spawns": [1,1,1, 1,1,1, 2,2, 2,2], "interval": 1.2 }, # 3P, 3P, 2B, 2B
@@ -34,35 +34,35 @@ func _ready():
 	spawn_timer.one_shot = true
 	spawn_timer.timeout.connect(_spawn_next)
 	add_child(spawn_timer)
-	reset_waves()
+	reset_rounds()
 
-func reset_waves():
-	self.current_wave = 0
-	wave_active = false
+func reset_rounds():
+	self.current_round = 0
+	round_active = false
 	active_asteroids = 0
-	leaks_this_wave = 0
+	leaks_this_round = 0
 	spawn_list.clear()
 	if spawn_timer:
 		spawn_timer.stop()
 
-func set_wave(value: int):
-	current_wave = clamp(value, 0, TOTAL_WAVES)
-	wave_changed.emit(current_wave)
+func set_round(value: int):
+	current_round = clamp(value, 0, TOTAL_ROUNDS)
+	round_changed.emit(current_round)
 
-func start_wave():
-	if wave_active or GameManager.current_phase == GameManager.GamePhase.GAME_OVER or GameManager.current_phase == GameManager.GamePhase.GAME_WON:
+func start_round():
+	if round_active or GameManager.current_phase == GameManager.GamePhase.GAME_OVER or GameManager.current_phase == GameManager.GamePhase.GAME_WON:
 		return
 		
-	self.current_wave += 1
-	wave_active = true
-	leaks_this_wave = 0
+	self.current_round += 1
+	round_active = true
+	leaks_this_round = 0
 	active_asteroids = 0
 	
-	GameManager.current_phase = GameManager.GamePhase.WAVE_ACTIVE
-	wave_started.emit(current_wave)
+	GameManager.current_phase = GameManager.GamePhase.ROUND_ACTIVE
+	round_started.emit(current_round)
 	
 	# Load definitions
-	var def = wave_definitions.get(current_wave, wave_definitions[1])
+	var def = round_definitions.get(current_round, round_definitions[1])
 	spawn_list.clear()
 	for s in def["spawns"]:
 		spawn_list.append(s)
@@ -98,24 +98,24 @@ func register_asteroid_spawn():
 
 func register_asteroid_removed():
 	active_asteroids = max(0, active_asteroids - 1)
-	_check_wave_end()
+	_check_round_end()
 
 func register_leak():
-	leaks_this_wave += 1
+	leaks_this_round += 1
 
-func _check_wave_end():
-	if wave_active and spawn_list.is_empty() and active_asteroids == 0:
-		wave_active = false
-		var no_leak = (leaks_this_wave == 0)
+func _check_round_end():
+	if round_active and spawn_list.is_empty() and active_asteroids == 0:
+		round_active = false
+		var no_leak = (leaks_this_round == 0)
 		
 		# Award bonus
 		if no_leak:
-			var bonus = current_wave * 5
+			var bonus = current_round * 5
 			EconomyManager.add_minerals(bonus)
 			
-		wave_completed.emit(current_wave, no_leak)
+		round_completed.emit(current_round, no_leak)
 		
-		if current_wave >= TOTAL_WAVES:
+		if current_round >= TOTAL_ROUNDS:
 			GameManager.current_phase = GameManager.GamePhase.GAME_WON
 		else:
-			GameManager.current_phase = GameManager.GamePhase.WAVE_PREPARATION
+			GameManager.current_phase = GameManager.GamePhase.ROUND_PREPARATION

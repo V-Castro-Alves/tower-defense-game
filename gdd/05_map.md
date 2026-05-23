@@ -53,10 +53,10 @@ All grid tiles must be explicitly flagged in the game engine to govern movement 
 
 ## 5.4 Waypoints Array (GDScript Reference)
 
-The exact coordinates of the path nodes will be loaded into the `WaveManager` as an array of 2D coordinates.
+The exact coordinates of the path nodes will be loaded into the `RoundManager` as an array of 2D coordinates.
 
 ```gdscript
-# WaveManager path coordinate array (to be finalized in Phase 2)
+# RoundManager path coordinate array (to be finalized in Phase 2)
 var path_waypoints: Array[Vector2] = [
 	Vector2(0, 1),    # Start at top-left
 	Vector2(24, 1),   # First turn down

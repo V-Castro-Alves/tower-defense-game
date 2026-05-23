@@ -8,7 +8,7 @@
 
 Welcome to **Space Defenders**, a premium, tactical tower defense game built from the ground up in **Godot 4** using **GDScript**. 
 
-In Space Defenders, you deploy high-tech defense spaceships to protect a vital deep-space station from cascading waves of incoming asteroids. The game features a unique, physics-themed **asteroid deconstruction splitting system** where an asteroid's size *is* its health. Shooting larger asteroids splits them into smaller, faster-moving chunks, initiating chaotic and satisfying chain reactions that require tactical planning to survive.
+In Space Defenders, you deploy high-tech defense spaceships to protect a vital deep-space station from cascading rounds of incoming asteroids. The game features a unique, physics-themed **asteroid deconstruction splitting system** where an asteroid's size *is* its health. Shooting larger asteroids splits them into smaller, faster-moving chunks, initiating chaotic and satisfying chain reactions that require tactical planning to survive.
 
 ---
 
@@ -31,11 +31,11 @@ space_defenders/
 ├── gdd/                       # Modular Game Design Specification Folder
 │   ├── README.md              # 📖 GDD Folder Index Directory
 │   ├── 01_game_overview.md    # 🛸 Core loop, Win/Loss conditions
-│   ├── 02_core_mechanics.md   # ⚙️ Lives, economy, and wave triggers
+│   ├── 02_core_mechanics.md   # ⚙️ Lives, economy, and round triggers
 │   ├── 03_asteroids.md        # ☄️ Splitting, variants, and elementals
 │   ├── 04_spaceships.md       # 🛸 Placement, stats, 7 ship types
 │   ├── 05_map.md              # 🗺️ 32x18 Grid, Z-Path Loop layout
-│   ├── 06_wave_system.md      # 🌊 Waves 1-10 balance & progression
+│   ├── 06_round_system.md      # 🌊 Rounds 1-10 balance & progression
 │   ├── 07_ui_input.md         # 🖥️ HUD, preview clicks, management panel
 │   ├── 08_technical_architecture.md # 🏗️ Autoloads, Resource, Signal map
 │   ├── 09_tdd_test_plan.md    # 🧪 GUT Unit & Integration specs
@@ -46,13 +46,13 @@ space_defenders/
 │   ├── entities/              # Ship and Asteroid actors
 │   └── ui/                    # HUD and upgrade panel scenes
 ├── scripts/                   # GDScript Implementation scripts
-│   ├── managers/              # Singletons (Game, Wave, Economy)
+│   ├── managers/              # Singletons (Game, Round, Economy)
 │   ├── entities/              # Ship, variant, and elemental controllers
 │   └── ui/                    # Interface controllers
 ├── resources/                 # Custom Resource (.tres) Inspector DBs
 ├── tests/                     # GUT Test Suites
 │   ├── unit/                  # System tests in isolation
-│   └── integration/           # Wave and campaign run tests
+│   └── integration/           # Round and campaign run tests
 ├── project.godot              # Godot 4 Project file
 └── README.md                  # 🚀 Main Project Entrypoint (this file)
 ```
@@ -64,11 +64,11 @@ space_defenders/
 We have broken down our comprehensive v0.5 Game Design Document (GDD) into modular chapters. This makes the documentation highly maintainable, preventing merge conflicts and keeping updates clean:
 
 1. **[01. Game Overview](gdd/01_game_overview.md)**: Conceptual pitch, win/loss rules, and player loop.
-2. **[02. Core Mechanics](gdd/02_core_mechanics.md)**: Lives parameters, transaction systems, and manual wave triggers.
+2. **[02. Core Mechanics](gdd/02_core_mechanics.md)**: Lives parameters, transaction systems, and manual round triggers.
 3. **[03. Asteroids & Threat Registry](gdd/03_asteroids.md)**: Splitting physics, HP tiers, variants (Blinding/Crust/Regen/Rings), and elementals (Ice/Lava) reactions.
 4. **[04. Spaceships & Towers](gdd/04_spaceships.md)**: Tower registries, placement, repositioning costs, targeting systems, and advanced supports.
 5. **[05. Map Design](gdd/05_map.md)**: Coordinates, grid definitions, tile flags, and choke points.
-6. **[06. Wave System](gdd/06_wave_system.md)**: Wave-by-wave composition configs (Waves 1-10) and pacing rules.
+6. **[06. Round System](gdd/06_round_system.md)**: Round-by-round composition configs (Rounds 1-10) and pacing rules.
 7. **[07. UI & Input](gdd/07_ui_input.md)**: Head-up display layout, ghost previews, ship controls, and speed settings.
 8. **[08. Technical Architecture](gdd/08_technical_architecture.md)**: Singletons, event maps, signal listeners, and Resource GDScript definitions.
 9. **[09. TDD Test Plan](gdd/09_tdd_test_plan.md)**: Comprehensive spec guidelines for GUT test coverage.

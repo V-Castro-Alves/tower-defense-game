@@ -41,7 +41,7 @@ Due to cascading splits, a single high-tier asteroid requires numerous cumulativ
 
 Variants are modifiers stacked on top of an asteroid's base tier (e.g., a Meteor can be a normal Meteor or a Magnetic Meteor). Variants introduce specific resistances that counter certain ship types, forcing the player to deploy a diversified fleet rather than spamming a single high-tier ship.
 
-*Neutral asteroids dominate early waves. Variants begin appearing in Wave 5 and scale in frequency through Wave 10.*
+*Neutral asteroids dominate early rounds. Variants begin appearing in Round 5 and scale in frequency through Round 10.*
 
 ### Variant Profiles
 
@@ -75,7 +75,7 @@ Surrounded by an orbital belt of orbiting sand, gravel, and ice debris.
 
 Ice and Lava are rare elemental subtypes that stack on top of a tier and a variant. They do **not** affect player ships. Instead, they interact dynamically with **Hot Lasers** and **Cold Lasers** (upgrades available on Scouts and Laser Frigates).
 
-*Elemental asteroids begin appearing in Wave 5. Non-laser ships deal standard damage with no special interactions.*
+*Elemental asteroids begin appearing in Round 5. Non-laser ships deal standard damage with no special interactions.*
 
 ### ❄️ Ice Asteroids
 Visually distinguished by a pale blue color and frosted surface cracks.
