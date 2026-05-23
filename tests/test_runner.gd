@@ -386,11 +386,11 @@ func _ready():
 	var db_test = db_class.new()
 	add_child(db_test)
 	
-	if db_test.profiles.is_empty():
-		log_text += "  [FAIL] Threat Database profiles list was empty\n"
+	if db_test.profiles.is_empty() or db_test.ship_profiles.is_empty():
+		log_text += "  [FAIL] Tactical Database profiles/ship lists were empty\n"
 		passed = false
 	else:
-		log_text += "  [PASS] Threat Database profiles dictionary initialized successfully\n"
+		log_text += "  [PASS] Tactical Database profiles and ship dictionaries initialized successfully\n"
 		
 	var pebble_data = db_test.profiles.get("Pebble", {})
 	var lava_data = db_test.profiles.get("Lava Elemental", {})
@@ -399,6 +399,13 @@ func _ready():
 		passed = false
 	else:
 		log_text += "  [PASS] Threat profiles successfully match GDD speed, tier, and element criteria\n"
+		
+	var scout_data = db_test.ship_profiles.get("Scout", {})
+	if scout_data.get("cost") != "💎 20 Minerals" or scout_data.get("range") != "2.0 Tiles (128 px)":
+		log_text += "  [FAIL] Fleet Registry profile attributes mismatched GDD specifications\n"
+		passed = false
+	else:
+		log_text += "  [PASS] Fleet Registry profiles successfully match GDD cost and range specifications\n"
 		
 	# Clean up
 	db_test.queue_free()

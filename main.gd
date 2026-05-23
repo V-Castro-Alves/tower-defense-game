@@ -37,7 +37,7 @@ func _ready():
 		Vector2(1280, 576),
 		Vector2(1152, 576),
 		Vector2(1152, 960),
-		Vector2(2112, 960)
+		Vector2(1728, 960)
 	]
 	
 	# Visual Path Line
@@ -138,8 +138,9 @@ func is_tile_occupied(pos: Vector2) -> bool:
 	return false
 
 func is_position_buildable(pos: Vector2) -> bool:
-	# Keep ship center at least 24px inside viewport to prevent off-screen visual clipping
-	if pos.x < 24 or pos.x > 2048 - 24 or pos.y < 24 or pos.y > 1152 - 24:
+	# Keep ship center inside buildable viewport bounds.
+	# The right-side HUD panel begins at X=1728. Subtracting 24px ship buffer gives 1704px.
+	if pos.x < 24 or pos.x > 1704 or pos.y < 24 or pos.y > 1152 - 24:
 		return false
 		
 	# Overlap path
@@ -148,14 +149,6 @@ func is_position_buildable(pos: Vector2) -> bool:
 		
 	# Overlap existing tower
 	if is_tile_occupied(pos):
-		return false
-		
-	# Overlaps bottom HUD bar (starts at Y=1016px, ship half-height buffer gives 990px)
-	if pos.y >= 990.0:
-		return false
-		
-	# Overlaps top HUD bar (speed button and panels range from Y=30 to Y=82, Y=100 safety buffer)
-	if pos.y <= 100.0:
 		return false
 		
 	return true

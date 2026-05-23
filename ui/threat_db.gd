@@ -35,7 +35,7 @@ class ThreatPreview extends Control:
 		queue_redraw()
 
 	func _draw():
-		var center = Vector2(40, 40)
+		var center = size / 2.0
 		var draw_color = color
 		if elemental_type == "Ice":
 			draw_color = Color("#bae6fd") # Ice pale blue
@@ -75,7 +75,69 @@ class ThreatPreview extends Control:
 				tail_color.a = 0.7
 				draw_circle(center + Vector2(-draw_size/3, 0), draw_size/4, tail_color)
 
+
+# Custom Control node to programmatically draw exact ship previews
+class ShipPreview extends Control:
+	var ship_type: String = "Scout"
+	var ship_color: Color = Color("#22c55e")
+	
+	func setup_preview(type: String):
+		ship_type = type
+		match ship_type:
+			"Scout": ship_color = Color("#22c55e")
+			"Laser Frigate": ship_color = Color("#06b6d4")
+			"Missile Cruiser": ship_color = Color("#a855f7")
+			"Pulse Beam": ship_color = Color("#f59e0b")
+			"Ion Cannon": ship_color = Color("#3b82f6")
+			"Drone Carrier": ship_color = Color("#ec4899")
+			"Gravity Well": ship_color = Color("#ffffff")
+			
+		custom_minimum_size = Vector2(80, 80)
+		queue_redraw()
+
+	func _draw():
+		var center = size / 2.0
+		# Draw solid square representing ship centered (48x48 box)
+		var rect = Rect2(center.x - 24, center.y - 24, 48, 48)
+		draw_rect(rect, ship_color)
+		draw_rect(rect, Color.BLACK, false, 2.0)
+		
+		# Type specifics visual decoration inside square
+		match ship_type:
+			"Scout":
+				draw_line(center + Vector2(0, -16), center + Vector2(-12, 12), Color.BLACK, 2.0)
+				draw_line(center + Vector2(0, -16), center + Vector2(12, 12), Color.BLACK, 2.0)
+				draw_line(center + Vector2(-12, 12), center + Vector2(0, 4), Color.BLACK, 2.0)
+				draw_line(center + Vector2(12, 12), center + Vector2(0, 4), Color.BLACK, 2.0)
+			"Laser Frigate":
+				draw_circle(center, 8.0, Color.BLACK)
+				draw_circle(center, 4.0, Color.WHITE)
+			"Missile Cruiser":
+				draw_rect(Rect2(center.x - 6, center.y - 18, 12, 36), Color.BLACK)
+				draw_rect(Rect2(center.x - 18, center.y - 6, 36, 12), Color.BLACK)
+			"Pulse Beam":
+				draw_arc(center, 8.0, -PI/4, PI/4, 8, Color.BLACK, 2.0)
+				draw_arc(center, 14.0, -PI/4, PI/4, 8, Color.BLACK, 2.0)
+				draw_line(center, center + Vector2(12, 0), Color.BLACK, 2.0)
+			"Ion Cannon":
+				draw_rect(Rect2(center.x - 8, center.y - 20, 16, 12), Color.BLACK)
+			"Drone Carrier":
+				draw_circle(center, 6.0, Color.BLACK)
+				# Orbiting drones mini layout
+				for i in range(3):
+					var angle = (i * PI * 2.0 / 3.0) + PI/6.0
+					var drone_pos = center + Vector2.from_angle(angle) * 44.0
+					draw_rect(Rect2(drone_pos.x - 6, drone_pos.y - 6, 12, 12), Color("#f472b6"))
+					draw_rect(Rect2(drone_pos.x - 6, drone_pos.y - 6, 12, 12), Color.BLACK, false, 1.0)
+			"Gravity Well":
+				draw_circle(center, 16.0, Color.BLACK, false, 1.5)
+				draw_circle(center, 8.0, Color.BLACK, false, 1.5)
+				draw_circle(center, 3.0, Color.BLACK)
+
+
 var current_profile: Dictionary = {}
+var active_tab: String = "Threats"
+
 var profiles: Dictionary = {
 	"Pebble": {
 		"title": "PEBBLE (TIER 1 THREAT)",
@@ -154,18 +216,72 @@ var profiles: Dictionary = {
 		"desc": "Rare volcanic molten sub-type interacting dynamically with laser thermal frequencies.",
 		"advice": "Cold Laser solidifies it (0 damage conversion). Hot Laser triggers massive Overload explosion."
 	}
-};
+}
+
+var ship_profiles: Dictionary = {
+	"Scout": {
+		"title": "STARFLEET SCOUT (LIGHT INTERCEPTOR)",
+		"cost": "💎 20 Minerals", "range": "2.0 Tiles (128 px)", "damage": "1 Hit (Direct Shot)", "fire_rate": "1.0 shots/s",
+		"desc": "Light combat vessel designed for high-frequency direct engagements. Rapid fire rate and low cost make it exceptionally reliable.",
+		"advice": "Upgradable with Hot/Cold Laser and Optical Targeting. Ideal for Pebble cleanup and Blinding Tail bypass."
+	},
+	"Laser Frigate": {
+		"title": "LASER FRIGATE (PIERCING SCANNER)",
+		"cost": "💎 35 Minerals", "range": "5.0 Tiles (320 px)", "damage": "2 Hits (Linear Pierce)", "fire_rate": "1.0 shots/s",
+		"desc": "Heavy line-of-sight cruiser projecting concentrated laser beams that pierce all targets in their vector path.",
+		"advice": "Align along straight lanes for maximum traversal coverage. Upgradable with Hot/Cold Laser options."
+	},
+	"Missile Cruiser": {
+		"title": "MISSILE CRUISER (HEAVY ARTILLERY)",
+		"cost": "💎 45 Minerals", "range": "4.0 Tiles (256 px)", "damage": "1 Hit (96px Splash Area)", "fire_rate": "0.8 shots/s",
+		"desc": "Tactical support platform launching long-range high-explosive missiles that deal wide area splash damage.",
+		"advice": "Deploy at tight loops and intersections. Highly vulnerable to Ring Belt and Hard Crust defensive structures."
+	},
+	"Pulse Beam": {
+		"title": "PULSE BEAM (KINETIC CONE SWEEPER)",
+		"cost": "💎 55 Minerals", "range": "3.5 Tiles (224 px)", "damage": "1 Hit (90° Sweeping Cone)", "fire_rate": "0.5 shots/s",
+		"desc": "Dynamic tactical suppressor. Evaluates the local space sector to locate the densest cluster of threats and sweeps a wide cone wave.",
+		"advice": "Its kinetic force pauses Magnetic Core regeneration for 2.0s. Excellent for massive group control."
+	},
+	"Ion Cannon": {
+		"title": "ION CANNON (ORBITAL DEMOLISHER)",
+		"cost": "💎 60 Minerals", "range": "5.0 Tiles (320 px)", "damage": "3 Hits (Heavy Single)", "fire_rate": "0.5 shots/s",
+		"desc": "Heavy particle weapon firing high-yield ion blasts that deal massive single-target disruption.",
+		"advice": "Your primary anti-armor weapon to break down Giant and Planet Chunk structures. Back up with fast Scouts."
+	},
+	"Drone Carrier": {
+		"title": "DRONE CARRIER (SWARM COMPONENT)",
+		"cost": "💎 75 Minerals", "range": "4.0 Tiles (256 px)", "damage": "1 Hit per Drone (3 Drones)", "fire_rate": "0.8 shots/s per Drone",
+		"desc": "Mobile coordination hub hosting 3 interceptor drones. Drones separate to independently target different threats in range.",
+		"advice": "Perfect for broad swarm management. Drones deal 0 damage to Meteor (T3) or higher and are deflected by Ring Belt."
+	},
+	"Gravity Well": {
+		"title": "GRAVITY WELL (CHRONO-LOCK DEVICE)",
+		"cost": "💎 80 Minerals", "range": "4.0 Tiles (256 px)", "damage": "0 Hits (Cryo Freeze Wave)", "fire_rate": "0.16 shots/s (6s Cooldown)",
+		"desc": "High-tech support module emitting gravity waves that freeze and completely immobilize all threats in range.",
+		"advice": "Freeze durations scale inversely with mass (T1 Pebble = 4.0s down to T5 Chunk = 1.0s). Highly effective in loop zones."
+	}
+}
 
 var list_container: VBoxContainer
-var preview_box: ThreatPreview
+var preview_bg: PanelContainer
 var profile_title: Label
 var stats_grid: GridContainer
 var desc_text: Label
 var advice_text: Label
 
+var lbl_hp: Label
+var lbl_spd: Label
+var lbl_leak: Label
+var lbl_extra: Label
+
 var stat_hp: Label
 var stat_spd: Label
 var stat_leak: Label
+var stat_extra: Label
+
+var btn_tab_threats: Button
+var btn_tab_ships: Button
 
 func _ready():
 	# Full screen layout
@@ -205,7 +321,7 @@ func _ready():
 	panel.add_child(margin)
 	
 	var main_vbox = VBoxContainer.new()
-	main_vbox.add_theme_constant_override("separation", 24)
+	main_vbox.add_theme_constant_override("separation", 20)
 	margin.add_child(main_vbox)
 	
 	# Header HBox
@@ -213,7 +329,7 @@ func _ready():
 	main_vbox.add_child(header)
 	
 	var db_title = Label.new()
-	db_title.text = "THREAT DATABASE - COGNITIVE DEFENSE READOUT"
+	db_title.text = "TACTICAL COGNITIVE DATABASE"
 	db_title.add_theme_font_size_override("font_size", 28)
 	db_title.add_theme_color_override("font_color", Color("#06b6d4"))
 	db_title.size_flags_horizontal = SIZE_EXPAND_FILL
@@ -236,6 +352,25 @@ func _ready():
 	header.add_child(back_btn)
 	
 	main_vbox.add_child(HSeparator.new())
+	
+	# Tab Selection Row
+	var tab_hbox = HBoxContainer.new()
+	tab_hbox.add_theme_constant_override("separation", 16)
+	main_vbox.add_child(tab_hbox)
+	
+	btn_tab_threats = Button.new()
+	btn_tab_threats.text = "👾 METEOROID THREAT ARCHIVE"
+	btn_tab_threats.custom_minimum_size = Vector2(320, 48)
+	btn_tab_threats.add_theme_font_size_override("font_size", 16)
+	btn_tab_threats.pressed.connect(func(): set_tab("Threats"))
+	tab_hbox.add_child(btn_tab_threats)
+	
+	btn_tab_ships = Button.new()
+	btn_tab_ships.text = "🚀 STARFLEET FLEET REGISTRY"
+	btn_tab_ships.custom_minimum_size = Vector2(320, 48)
+	btn_tab_ships.add_theme_font_size_override("font_size", 16)
+	btn_tab_ships.pressed.connect(func(): set_tab("Ships"))
+	tab_hbox.add_child(btn_tab_ships)
 	
 	# Content Split Area (Sidebar + Detailed Card)
 	var content_area = HBoxContainer.new()
@@ -280,12 +415,12 @@ func _ready():
 	detail_card.add_child(card_margin)
 	
 	var card_vbox = VBoxContainer.new()
-	card_vbox.add_theme_constant_override("separation", 24)
+	card_vbox.add_theme_constant_override("separation", 20)
 	card_margin.add_child(card_vbox)
 	
 	# Header Profile
 	profile_title = Label.new()
-	profile_title.text = "THREAT PROFILE"
+	profile_title.text = "TACTICAL SCAN PROFILE"
 	profile_title.add_theme_font_size_override("font_size", 24)
 	profile_title.add_theme_color_override("font_color", Color("#fbbf24")) # Amber/Gold
 	card_vbox.add_child(profile_title)
@@ -298,7 +433,7 @@ func _ready():
 	# Programmatic Preview Box wrapper
 	var preview_container = CenterContainer.new()
 	preview_container.custom_minimum_size = Vector2(160, 160)
-	var preview_bg = PanelContainer.new()
+	preview_bg = PanelContainer.new()
 	var preview_style = StyleBoxFlat.new()
 	preview_style.bg_color = Color("#090d16")
 	preview_style.border_width_left = 2
@@ -313,9 +448,6 @@ func _ready():
 	preview_bg.add_theme_stylebox_override("panel", preview_style)
 	preview_bg.custom_minimum_size = Vector2(160, 160)
 	preview_container.add_child(preview_bg)
-	
-	preview_box = ThreatPreview.new()
-	preview_bg.add_child(preview_box)
 	mid_box.add_child(preview_container)
 	
 	# Stats Grid Container
@@ -327,7 +459,7 @@ func _ready():
 	mid_box.add_child(stats_grid)
 	
 	# Add static stats labels
-	var lbl_hp = Label.new()
+	lbl_hp = Label.new()
 	lbl_hp.text = "Structural Integrity:"
 	lbl_hp.add_theme_color_override("font_color", Color("#64748b"))
 	stats_grid.add_child(lbl_hp)
@@ -335,7 +467,7 @@ func _ready():
 	stat_hp.text = "--"
 	stats_grid.add_child(stat_hp)
 	
-	var lbl_spd = Label.new()
+	lbl_spd = Label.new()
 	lbl_spd.text = "Velocity Scale:"
 	lbl_spd.add_theme_color_override("font_color", Color("#64748b"))
 	stats_grid.add_child(lbl_spd)
@@ -343,13 +475,21 @@ func _ready():
 	stat_spd.text = "--"
 	stats_grid.add_child(stat_spd)
 	
-	var lbl_leak = Label.new()
+	lbl_leak = Label.new()
 	lbl_leak.text = "Leak Impact (Station Lives):"
 	lbl_leak.add_theme_color_override("font_color", Color("#64748b"))
 	stats_grid.add_child(lbl_leak)
 	stat_leak = Label.new()
 	stat_leak.text = "--"
 	stats_grid.add_child(stat_leak)
+
+	lbl_extra = Label.new()
+	lbl_extra.text = "Firing Frequency:"
+	lbl_extra.add_theme_color_override("font_color", Color("#64748b"))
+	stats_grid.add_child(lbl_extra)
+	stat_extra = Label.new()
+	stat_extra.text = "--"
+	stats_grid.add_child(stat_extra)
 	
 	card_vbox.add_child(HSeparator.new())
 	
@@ -375,8 +515,51 @@ func _ready():
 	advice_text.add_theme_color_override("font_color", Color("#a855f7")) # Tech purple highlight
 	card_vbox.add_child(advice_text)
 	
-	# Instantiate list keys
-	var keys = ["Pebble", "Boulder", "Meteor", "Giant", "Planet Chunk", "Hard Crust", "Magnetic Core", "Ring Belt", "Blinding Tail", "Ice Elemental", "Lava Elemental"]
+	# Initial setup of active tabs
+	set_tab("Threats")
+
+func set_tab(tab_name: String):
+	active_tab = tab_name
+	style_tabs()
+	rebuild_sidebar()
+
+func style_tabs():
+	var style_active = StyleBoxFlat.new()
+	style_active.bg_color = Color(0.1, 0.18, 0.32, 0.9)
+	style_active.border_width_bottom = 4
+	style_active.border_color = Color("#06b6d4") # Bright Cyan underline
+	style_active.corner_radius_top_left = 6
+	style_active.corner_radius_top_right = 6
+	
+	var style_inactive = StyleBoxFlat.new()
+	style_inactive.bg_color = Color(0.04, 0.06, 0.12, 0.5)
+	style_inactive.border_width_bottom = 1
+	style_inactive.border_color = Color(0.2, 0.3, 0.5, 0.3)
+	style_inactive.corner_radius_top_left = 6
+	style_inactive.corner_radius_top_right = 6
+	
+	if active_tab == "Threats":
+		btn_tab_threats.add_theme_stylebox_override("normal", style_active)
+		btn_tab_threats.add_theme_stylebox_override("hover", style_active)
+		btn_tab_ships.add_theme_stylebox_override("normal", style_inactive)
+		btn_tab_ships.add_theme_stylebox_override("hover", style_inactive)
+	else:
+		btn_tab_threats.add_theme_stylebox_override("normal", style_inactive)
+		btn_tab_threats.add_theme_stylebox_override("hover", style_inactive)
+		btn_tab_ships.add_theme_stylebox_override("normal", style_active)
+		btn_tab_ships.add_theme_stylebox_override("hover", style_active)
+
+func rebuild_sidebar():
+	# Clear sidebar children
+	for child in list_container.get_children():
+		child.queue_free()
+		
+	var keys = []
+	if active_tab == "Threats":
+		keys = ["Pebble", "Boulder", "Meteor", "Giant", "Planet Chunk", "Hard Crust", "Magnetic Core", "Ring Belt", "Blinding Tail", "Ice Elemental", "Lava Elemental"]
+	else:
+		keys = ["Scout", "Laser Frigate", "Missile Cruiser", "Pulse Beam", "Ion Cannon", "Drone Carrier", "Gravity Well"]
+		
 	for k in keys:
 		var btn = Button.new()
 		btn.text = k.to_upper()
@@ -401,20 +584,71 @@ func _ready():
 		list_container.add_child(btn)
 		
 	# Select default first profile on load
-	display_profile("Pebble")
+	if not keys.is_empty():
+		display_profile(keys[0])
 
 func display_profile(key: String):
-	var data = profiles.get(key, {})
-	if data.is_empty():
-		return
+	if active_tab == "Threats":
+		var data = profiles.get(key, {})
+		if data.is_empty():
+			return
+			
+		current_profile = data
+		profile_title.text = data["title"]
 		
-	current_profile = data
-	profile_title.text = data["title"]
-	stat_hp.text = data["integrity"]
-	stat_spd.text = data["speed"]
-	stat_leak.text = data["penalty"]
-	desc_text.text = data["desc"]
-	advice_text.text = data["advice"]
-	
-	# Update programmatic thumbnail renderer!
-	preview_box.setup_preview(data["tier"] as int, data["variant"] as String, data["element"] as String)
+		# Set labels back to threat layout
+		lbl_hp.text = "Structural Integrity:"
+		lbl_spd.text = "Velocity Scale:"
+		lbl_leak.text = "Leak Impact (Station Lives):"
+		lbl_extra.visible = false
+		stat_extra.visible = false
+		
+		stat_hp.text = data["integrity"]
+		stat_spd.text = data["speed"]
+		stat_leak.text = data["penalty"]
+		
+		desc_text.text = data["desc"]
+		advice_text.text = data["advice"]
+		
+		# Update programmatic thumbnail renderer!
+		update_preview_node("", "Threats", data["tier"] as int, data["variant"] as String, data["element"] as String)
+	else:
+		var data = ship_profiles.get(key, {})
+		if data.is_empty():
+			return
+			
+		current_profile = data
+		profile_title.text = data["title"]
+		
+		# Set labels to ship layout
+		lbl_hp.text = "Acquisition Cost:"
+		lbl_spd.text = "Targeting Range:"
+		lbl_leak.text = "Base Damage & Type:"
+		lbl_extra.text = "Firing Frequency:"
+		lbl_extra.visible = true
+		stat_extra.visible = true
+		
+		stat_hp.text = data["cost"]
+		stat_spd.text = data["range"]
+		stat_leak.text = data["damage"]
+		stat_extra.text = data["fire_rate"]
+		
+		desc_text.text = data["desc"]
+		advice_text.text = data["advice"]
+		
+		# Update programmatic thumbnail renderer!
+		update_preview_node(key, "Ships")
+
+func update_preview_node(type: String, mode: String, t_tier: int = 1, v_variant: String = "None", e_element: String = "None"):
+	# Clear existing children in preview_bg
+	for child in preview_bg.get_children():
+		child.queue_free()
+		
+	if mode == "Threats":
+		var box = ThreatPreview.new()
+		preview_bg.add_child(box)
+		box.setup_preview(t_tier, v_variant, e_element)
+	else:
+		var box = ShipPreview.new()
+		preview_bg.add_child(box)
+		box.setup_preview(type)

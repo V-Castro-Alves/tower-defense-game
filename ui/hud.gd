@@ -3,7 +3,6 @@ extends CanvasLayer
 var lives_label: Label
 var minerals_label: Label
 var wave_label: Label
-var speed_btn: Button
 var launch_btn: Button
 var shop_buttons: Dictionary = {}
 
@@ -17,140 +16,93 @@ func _ready():
 	hud_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(hud_root)
 	
-	# Top bar container
-	var top_bar = HBoxContainer.new()
-	top_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	top_bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	top_bar.position = Vector2(40, 30)
-	top_bar.add_theme_constant_override("separation", 24)
-	hud_root.add_child(top_bar)
+	# Create vertical panel Container on the right side of the screen
+	# Virtual resolution is 2048 x 1152. Side panel width is 320 px (X: 1728 to 2048)
+	var right_panel = PanelContainer.new()
+	right_panel.mouse_filter = Control.MOUSE_FILTER_STOP # Block mouse clicks going to game map
 	
-	# Styles for Panels (Glassmorphism styling)
 	var panel_style = StyleBoxFlat.new()
-	panel_style.bg_color = Color(0.05, 0.08, 0.15, 0.75) # Dark translucent blue
-	panel_style.border_width_left = 1
-	panel_style.border_width_top = 1
-	panel_style.border_width_right = 1
-	panel_style.border_width_bottom = 1
-	panel_style.border_color = Color(0.2, 0.3, 0.5, 0.5) # Soft cyan/blue outline
-	panel_style.corner_radius_top_left = 8
-	panel_style.corner_radius_top_right = 8
-	panel_style.corner_radius_bottom_left = 8
-	panel_style.corner_radius_bottom_right = 8
+	panel_style.bg_color = Color(0.03, 0.05, 0.1, 0.85) # Dark translucent blue glass
+	panel_style.border_width_left = 2
+	panel_style.border_color = Color(0.2, 0.4, 0.7, 0.6) # Sleek glowing cyan border on the left
+	panel_style.corner_radius_top_left = 0
+	panel_style.corner_radius_bottom_left = 0
+	right_panel.add_theme_stylebox_override("panel", panel_style)
 	
-	# 1. Lives Display
-	var lives_panel = PanelContainer.new()
-	lives_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	lives_panel.add_theme_stylebox_override("panel", panel_style)
-	top_bar.add_child(lives_panel)
+	right_panel.custom_minimum_size = Vector2(320, 1152)
+	right_panel.position = Vector2(2048 - 320, 0)
+	hud_root.add_child(right_panel)
 	
-	var lives_margin = MarginContainer.new()
-	lives_margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	lives_margin.add_theme_constant_override("margin_left", 20)
-	lives_margin.add_theme_constant_override("margin_top", 10)
-	lives_margin.add_theme_constant_override("margin_right", 20)
-	lives_margin.add_theme_constant_override("margin_bottom", 10)
-	lives_panel.add_child(lives_margin)
+	var margin = MarginContainer.new()
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margin.add_theme_constant_override("margin_left", 20)
+	margin.add_theme_constant_override("margin_top", 30)
+	margin.add_theme_constant_override("margin_right", 20)
+	margin.add_theme_constant_override("margin_bottom", 30)
+	right_panel.add_child(margin)
 	
+	var main_vbox = VBoxContainer.new()
+	main_vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	main_vbox.add_theme_constant_override("separation", 24)
+	margin.add_child(main_vbox)
+	
+	# --- Top Section: Status HUD ---
+	var status_vbox = VBoxContainer.new()
+	status_vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	status_vbox.add_theme_constant_override("separation", 12)
+	main_vbox.add_child(status_vbox)
+	
+	# Lives and Minerals HBox (Upper Position, emojis only)
+	var resources_hbox = HBoxContainer.new()
+	resources_hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	resources_hbox.add_theme_constant_override("separation", 24)
+	status_vbox.add_child(resources_hbox)
+	
+	# Lives Label
 	lives_label = Label.new()
-	lives_label.text = "❤️ LIVES: 20"
-	lives_label.add_theme_font_size_override("font_size", 24)
-	lives_label.add_theme_color_override("font_color", Color("#ef4444")) # Bright red
-	lives_margin.add_child(lives_label)
+	lives_label.text = "❤️ 20"
+	lives_label.add_theme_font_size_override("font_size", 26)
+	lives_label.add_theme_color_override("font_color", Color("#ef4444")) # Red
+	lives_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	resources_hbox.add_child(lives_label)
 	
-	# 2. Minerals Display
-	var minerals_panel = PanelContainer.new()
-	minerals_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	minerals_panel.add_theme_stylebox_override("panel", panel_style)
-	top_bar.add_child(minerals_panel)
-	
-	var minerals_margin = MarginContainer.new()
-	minerals_margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	minerals_margin.add_theme_constant_override("margin_left", 20)
-	minerals_margin.add_theme_constant_override("margin_top", 10)
-	minerals_margin.add_theme_constant_override("margin_right", 20)
-	minerals_margin.add_theme_constant_override("margin_bottom", 10)
-	minerals_panel.add_child(minerals_margin)
-	
+	# Minerals Label
 	minerals_label = Label.new()
-	minerals_label.text = "💎 MINERALS: 50"
-	minerals_label.add_theme_font_size_override("font_size", 24)
-	minerals_label.add_theme_color_override("font_color", Color("#06b6d4")) # Bright cyan
-	minerals_margin.add_child(minerals_label)
+	minerals_label.text = "💎 50"
+	minerals_label.add_theme_font_size_override("font_size", 26)
+	minerals_label.add_theme_color_override("font_color", Color("#06b6d4")) # Cyan
+	resources_hbox.add_child(minerals_label)
 	
-	# 3. Wave Display
-	var wave_panel = PanelContainer.new()
-	wave_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	wave_panel.add_theme_stylebox_override("panel", panel_style)
-	top_bar.add_child(wave_panel)
-	
-	var wave_margin = MarginContainer.new()
-	wave_margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	wave_margin.add_theme_constant_override("margin_left", 20)
-	wave_margin.add_theme_constant_override("margin_top", 10)
-	wave_margin.add_theme_constant_override("margin_right", 20)
-	wave_margin.add_theme_constant_override("margin_bottom", 10)
-	wave_panel.add_child(wave_margin)
-	
+	# Wave Label (Directly underneath resources, text only)
 	wave_label = Label.new()
-	wave_label.text = "🌊 WAVE: 0 / 10"
-	wave_label.add_theme_font_size_override("font_size", 24)
-	wave_label.add_theme_color_override("font_color", Color("#f97316")) # Bright orange
-	wave_margin.add_child(wave_label)
+	wave_label.text = "WAVE: 0 / 10"
+	wave_label.add_theme_font_size_override("font_size", 22)
+	wave_label.add_theme_color_override("font_color", Color("#f97316")) # Orange
+	status_vbox.add_child(wave_label)
 	
-	# 4. Speed Toggle Button
-	speed_btn = Button.new()
-	speed_btn.text = "SPEED: 1x"
-	speed_btn.custom_minimum_size = Vector2(160, 48)
-	speed_btn.add_theme_font_size_override("font_size", 20)
-	speed_btn.pressed.connect(func(): GameManager.toggle_speed())
+	# Small separator between status and shop list
+	status_vbox.add_child(HSeparator.new())
 	
-	var speed_style_normal = StyleBoxFlat.new()
-	speed_style_normal.bg_color = Color(0.1, 0.15, 0.25, 0.8)
-	speed_style_normal.corner_radius_top_left = 8
-	speed_style_normal.corner_radius_top_right = 8
-	speed_style_normal.corner_radius_bottom_left = 8
-	speed_style_normal.corner_radius_bottom_right = 8
-	speed_btn.add_theme_stylebox_override("normal", speed_style_normal)
-	speed_btn.add_theme_stylebox_override("hover", speed_style_normal)
-	speed_btn.add_theme_stylebox_override("pressed", speed_style_normal)
-	top_bar.add_child(speed_btn)
+	# --- Middle Section: Vertical Shop ---
+	var shop_label = Label.new()
+	shop_label.text = "STARFLEET FACTORY"
+	shop_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	shop_label.add_theme_font_size_override("font_size", 16)
+	shop_label.add_theme_color_override("font_color", Color("#64748b")) # Tech slate
+	main_vbox.add_child(shop_label)
 	
-	# Bottom Shop Container snapped to bottom-center
-	var shop_panel_container = PanelContainer.new()
-	shop_panel_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var shop_style = StyleBoxFlat.new()
-	shop_style.bg_color = Color(0.03, 0.05, 0.1, 0.85) # Very dark translucent blue
-	shop_style.border_width_left = 2
-	shop_style.border_width_top = 2
-	shop_style.border_width_right = 2
-	shop_style.border_width_bottom = 2
-	shop_style.border_color = Color(0.2, 0.4, 0.7, 0.6) # Sleek borders
-	shop_style.corner_radius_top_left = 12
-	shop_style.corner_radius_top_right = 12
-	shop_style.corner_radius_bottom_left = 0
-	shop_style.corner_radius_bottom_right = 0
-	shop_panel_container.add_theme_stylebox_override("panel", shop_style)
+	var shop_scroll = ScrollContainer.new()
+	shop_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	shop_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	main_vbox.add_child(shop_scroll)
 	
-	# Positioning shop container
-	shop_panel_container.custom_minimum_size = Vector2(1540, 136)
-	shop_panel_container.position = Vector2(2048.0 / 2.0 - 1540.0 / 2.0, 1152.0 - 136.0)
-	hud_root.add_child(shop_panel_container)
+	var shop_vbox = VBoxContainer.new()
+	shop_vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	shop_vbox.add_theme_constant_override("separation", 14)
+	shop_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	shop_scroll.add_child(shop_vbox)
 	
-	var shop_margin = MarginContainer.new()
-	shop_margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	shop_margin.add_theme_constant_override("margin_left", 24)
-	shop_margin.add_theme_constant_override("margin_top", 12)
-	shop_margin.add_theme_constant_override("margin_right", 24)
-	shop_margin.add_theme_constant_override("margin_bottom", 12)
-	shop_panel_container.add_child(shop_margin)
-	
-	var shop_hbox = HBoxContainer.new()
-	shop_hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	shop_hbox.add_theme_constant_override("separation", 24)
-	shop_margin.add_child(shop_hbox)
-	
-	# Registering the 7 shop items [Ship Name, cost, color]
+	# The 7 ship registry items
 	var shop_items = [
 		{"name": "Scout", "cost": 20, "color": Color("#22c55e")},
 		{"name": "Laser Frigate", "cost": 35, "color": Color("#06b6d4")},
@@ -163,11 +115,11 @@ func _ready():
 	
 	for item in shop_items:
 		var btn = Button.new()
-		btn.custom_minimum_size = Vector2(190, 88)
+		btn.custom_minimum_size = Vector2(280, 72)
 		btn.add_theme_font_size_override("font_size", 16)
 		btn.text = "%s\n💎 %d" % [item["name"], item["cost"]]
 		
-		# Stylized normal state
+		# Stylized flat state
 		var btn_style = StyleBoxFlat.new()
 		btn_style.bg_color = Color(0.08, 0.12, 0.22, 0.8)
 		btn_style.border_width_left = 2
@@ -185,33 +137,27 @@ func _ready():
 		btn.add_theme_stylebox_override("disabled", btn_style)
 		
 		btn.pressed.connect(func(): get_parent().start_placement_mode(item["name"]))
-		shop_hbox.add_child(btn)
+		shop_vbox.add_child(btn)
 		
-		# Save reference to adjust disabled state based on minerals
+		# Save references
 		shop_buttons[item["name"]] = {"button": btn, "cost": item["cost"], "color": item["color"]}
 		
-	# 5. Launch Wave Button at bottom-right
+	# --- Bottom Section: Fixed Launch/Speed Up Button ---
 	launch_btn = Button.new()
 	launch_btn.text = "LAUNCH WAVE 1"
 	launch_btn.custom_minimum_size = Vector2(280, 88)
-	launch_btn.position = Vector2(2048 - 320, 1152 - 112)
-	launch_btn.add_theme_font_size_override("font_size", 24)
+	launch_btn.add_theme_font_size_override("font_size", 22)
 	
-	var launch_style = StyleBoxFlat.new()
-	launch_style.bg_color = Color("#16a34a") # Emerald green
-	launch_style.corner_radius_top_left = 8
-	launch_style.corner_radius_top_right = 8
-	launch_style.corner_radius_bottom_left = 8
-	launch_style.corner_radius_bottom_right = 8
-	launch_btn.add_theme_stylebox_override("normal", launch_style)
-	launch_btn.add_theme_stylebox_override("hover", launch_style)
-	launch_btn.add_theme_stylebox_override("pressed", launch_style)
-	launch_btn.add_theme_stylebox_override("disabled", launch_style)
+	# Handles dynamic callback checking phase state
+	launch_btn.pressed.connect(func():
+		if GameManager.current_phase == GameManager.GamePhase.WAVE_ACTIVE:
+			GameManager.toggle_speed()
+		else:
+			WaveManager.start_wave()
+	)
+	main_vbox.add_child(launch_btn)
 	
-	launch_btn.pressed.connect(func(): WaveManager.start_wave())
-	hud_root.add_child(launch_btn)
-	
-	# Context Ship Panel upgrade/sell/reposition
+	# Floating Ship Upgrade Panel
 	var panel_scene = load("res://ui/ship_panel.tscn")
 	ship_panel = panel_scene.instantiate()
 	add_child(ship_panel)
@@ -238,34 +184,64 @@ func _update_hud():
 		
 	# Format Dev Mode text beautifully
 	if GameManager.dev_mode:
-		lives_label.text = "❤️ LIVES: ♾️"
-		minerals_label.text = "💎 MINERALS: ♾️"
+		lives_label.text = "❤️ ♾️"
+		minerals_label.text = "💎 ♾️"
 	else:
-		lives_label.text = "❤️ LIVES: %d / 20" % GameManager.lives
-		minerals_label.text = "💎 MINERALS: %d" % EconomyManager.minerals
+		lives_label.text = "❤️ %d" % GameManager.lives
+		minerals_label.text = "💎 %d" % EconomyManager.minerals
 		
-	wave_label.text = "🌊 WAVE: %d / 10" % WaveManager.current_wave
-	speed_btn.text = "SPEED: %.0fx" % GameManager.speed_multiplier
+	wave_label.text = "WAVE: %d / 10" % WaveManager.current_wave
 	
-	# Launch Wave text
+	# Launch/Speed toggle state
 	if GameManager.current_phase == GameManager.GamePhase.WAVE_ACTIVE:
-		launch_btn.disabled = true
-		launch_btn.text = "WAVE IN PROGRESS"
-		var launch_style_disabled = launch_btn.get_theme_stylebox("disabled").duplicate()
-		launch_style_disabled.bg_color = Color(0.2, 0.2, 0.2, 0.8)
-		launch_btn.add_theme_stylebox_override("disabled", launch_style_disabled)
+		launch_btn.disabled = false
+		launch_btn.text = "SPEED: %.0fx" % GameManager.speed_multiplier
+		
+		var style_speed = StyleBoxFlat.new()
+		style_speed.bg_color = Color("#3b82f6") # Blue
+		style_speed.corner_radius_top_left = 8
+		style_speed.corner_radius_top_right = 8
+		style_speed.corner_radius_bottom_left = 8
+		style_speed.corner_radius_bottom_right = 8
+		launch_btn.add_theme_stylebox_override("normal", style_speed)
+		launch_btn.add_theme_stylebox_override("hover", style_speed)
+		launch_btn.add_theme_stylebox_override("pressed", style_speed)
+		
 	elif GameManager.current_phase == GameManager.GamePhase.GAME_OVER:
 		launch_btn.disabled = true
 		launch_btn.text = "GAME OVER"
+		var style_disabled = StyleBoxFlat.new()
+		style_disabled.bg_color = Color(0.2, 0.2, 0.2, 0.8)
+		style_disabled.corner_radius_top_left = 8
+		style_disabled.corner_radius_top_right = 8
+		style_disabled.corner_radius_bottom_left = 8
+		style_disabled.corner_radius_bottom_right = 8
+		launch_btn.add_theme_stylebox_override("disabled", style_disabled)
+		
 	elif GameManager.current_phase == GameManager.GamePhase.GAME_WON:
 		launch_btn.disabled = true
 		launch_btn.text = "VICTORY!"
+		var style_disabled = StyleBoxFlat.new()
+		style_disabled.bg_color = Color(0.2, 0.2, 0.2, 0.8)
+		style_disabled.corner_radius_top_left = 8
+		style_disabled.corner_radius_top_right = 8
+		style_disabled.corner_radius_bottom_left = 8
+		style_disabled.corner_radius_bottom_right = 8
+		launch_btn.add_theme_stylebox_override("disabled", style_disabled)
+		
 	else:
 		launch_btn.disabled = false
 		launch_btn.text = "LAUNCH WAVE %d" % (WaveManager.current_wave + 1)
-		var launch_style_normal = launch_btn.get_theme_stylebox("normal").duplicate()
-		launch_style_normal.bg_color = Color("#16a34a")
-		launch_btn.add_theme_stylebox_override("normal", launch_style_normal)
+		
+		var style_launch = StyleBoxFlat.new()
+		style_launch.bg_color = Color("#16a34a") # Green
+		style_launch.corner_radius_top_left = 8
+		style_launch.corner_radius_top_right = 8
+		style_launch.corner_radius_bottom_left = 8
+		style_launch.corner_radius_bottom_right = 8
+		launch_btn.add_theme_stylebox_override("normal", style_launch)
+		launch_btn.add_theme_stylebox_override("hover", style_launch)
+		launch_btn.add_theme_stylebox_override("pressed", style_launch)
 
 func _update_shop_buttons():
 	var balance = EconomyManager.minerals
@@ -280,7 +256,6 @@ func _update_shop_buttons():
 			btn.modulate = Color.WHITE
 			style.bg_color = Color(0.08, 0.12, 0.22, 0.85)
 		else:
-			# Visual gray out if unaffordable
 			btn.disabled = true
 			btn.modulate = Color(1.0, 1.0, 1.0, 0.35)
 			style.bg_color = Color(0.05, 0.05, 0.08, 0.9)
@@ -310,7 +285,6 @@ func _on_wave_completed(_val, _no_leak):
 func _on_phase_changed(_val):
 	_update_hud()
 
-# Floating Ship Panel controller
 func open_ship_panel(ship: Node2D):
 	if is_instance_valid(ship):
 		ship_panel.open_for_ship(ship)
