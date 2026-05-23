@@ -1,0 +1,33 @@
+extends Node
+
+signal minerals_changed(current_minerals)
+
+var minerals: int = 50 : set = set_minerals
+
+func _ready():
+	reset_economy()
+
+func reset_economy():
+	self.minerals = 50
+
+func set_minerals(value: int):
+	minerals = max(0, value)
+	minerals_changed.emit(minerals)
+
+func can_afford(amount: int) -> bool:
+	return minerals >= amount
+
+func spend_minerals(amount: int) -> bool:
+	if can_afford(amount):
+		self.minerals -= amount
+		return true
+	return false
+
+func add_minerals(amount: int):
+	self.minerals += amount
+
+func get_reposition_fee(base_cost: int) -> int:
+	return ceil(base_cost * 0.15)
+
+func get_sell_refund(total_value: int) -> int:
+	return floor(total_value * 0.70)
