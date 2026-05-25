@@ -78,9 +78,10 @@ func _ready():
 	add_child(hud)
 	
 	# Load Main Menu overlay at start in PRE_GAME phase
-	var menu_class = load("res://ui/main_menu.gd")
-	var menu = menu_class.new()
-	add_child(menu)
+	if GameManager.current_phase == GameManager.GamePhase.PRE_GAME:
+		var menu_class = load("res://ui/main_menu.gd")
+		var menu = menu_class.new()
+		add_child(menu)
 	
 	# Setup starting ships (Scouts) - removed so board starts completely empty
 

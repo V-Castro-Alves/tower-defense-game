@@ -46,6 +46,7 @@ Designed for automated analytical processing, graphing, and spreadsheet import:
 ```json
 {
 	"timestamp": "20260523_192530",
+	"developer_mode": false,
 	"total_play_time_seconds": 320,
 	"victory": true,
 	"starting_capital": 200,

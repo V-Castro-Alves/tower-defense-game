@@ -40,8 +40,8 @@ func _ready():
 	style.corner_radius_bottom_right = 16
 	panel.add_theme_stylebox_override("panel", style)
 	
-	panel.custom_minimum_size = Vector2(640, 480)
-	panel.position = Vector2(2048.0 / 2.0 - 640.0 / 2.0, 1152.0 / 2.0 - 480.0 / 2.0)
+	panel.custom_minimum_size = Vector2(640, 560)
+	panel.position = Vector2(2048.0 / 2.0 - 640.0 / 2.0, 1152.0 / 2.0 - 560.0 / 2.0)
 	add_child(panel)
 	
 	var margin = MarginContainer.new()
@@ -102,6 +102,29 @@ func _ready():
 	btn_normal.pressed.connect(_on_normal_pressed)
 	vbox.add_child(btn_normal)
 	
+	# Hard Mode button
+	var btn_hard = Button.new()
+	btn_hard.custom_minimum_size.y = 72
+	btn_hard.add_theme_font_size_override("font_size", 20)
+	btn_hard.text = "HARD MODE\n💎 150 | ❤️ 1"
+	
+	var style_hard = StyleBoxFlat.new()
+	style_hard.bg_color = Color(0.18, 0.08, 0.08, 0.8)
+	style_hard.border_width_left = 2
+	style_hard.border_width_top = 2
+	style_hard.border_width_right = 2
+	style_hard.border_width_bottom = 2
+	style_hard.border_color = Color("#dc2626") # Crimson/Red
+	style_hard.corner_radius_top_left = 8
+	style_hard.corner_radius_top_right = 8
+	style_hard.corner_radius_bottom_left = 8
+	style_hard.corner_radius_bottom_right = 8
+	btn_hard.add_theme_stylebox_override("normal", style_hard)
+	btn_hard.add_theme_stylebox_override("hover", style_hard)
+	btn_hard.add_theme_stylebox_override("pressed", style_hard)
+	btn_hard.pressed.connect(_on_hard_pressed)
+	vbox.add_child(btn_hard)
+	
 	# Dev Mode button
 	var btn_dev = Button.new()
 	btn_dev.custom_minimum_size.y = 72
@@ -152,6 +175,16 @@ func _on_normal_pressed():
 	GameManager.dev_mode = false
 	GameManager.lives = 20
 	EconomyManager.minerals = 200
+	
+	# Transition Phase to preparing & clear menu overlay
+	GameManager.current_phase = GameManager.GamePhase.ROUND_PREPARATION
+	queue_free()
+
+func _on_hard_pressed():
+	# Configure Hard Mode starting states
+	GameManager.dev_mode = false
+	GameManager.lives = 1
+	EconomyManager.minerals = 150
 	
 	# Transition Phase to preparing & clear menu overlay
 	GameManager.current_phase = GameManager.GamePhase.ROUND_PREPARATION

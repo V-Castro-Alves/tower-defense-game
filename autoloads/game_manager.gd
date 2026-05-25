@@ -31,6 +31,18 @@ func reset_game():
 func set_phase(value: GamePhase):
 	if current_phase == value:
 		return
+		
+	if current_phase == GamePhase.PRE_GAME and value == GamePhase.ROUND_PREPARATION:
+		MetricsManager.playthrough_start_time = Time.get_unix_time_from_system()
+		MetricsManager.starting_capital = EconomyManager.minerals
+		MetricsManager.starting_lives = lives
+		if dev_mode:
+			MetricsManager.operations_mode = "Developer"
+		elif lives == 1:
+			MetricsManager.operations_mode = "Hard"
+		else:
+			MetricsManager.operations_mode = "Normal"
+			
 	current_phase = value
 	phase_changed.emit(current_phase)
 	

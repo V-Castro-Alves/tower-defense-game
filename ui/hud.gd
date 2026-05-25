@@ -10,6 +10,7 @@ var ship_panel: Control
 var hud_root: Control
 
 func _ready():
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	# Screen boundaries (Control node setup)
 	hud_root = Control.new()
 	hud_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -166,6 +167,8 @@ func _ready():
 	GameManager.lives_changed.connect(_on_lives_changed)
 	GameManager.speed_changed.connect(_on_speed_changed)
 	GameManager.phase_changed.connect(_on_phase_changed)
+	GameManager.game_over.connect(_on_game_over)
+	GameManager.game_won.connect(_on_game_won)
 	EconomyManager.minerals_changed.connect(_on_minerals_changed)
 	RoundManager.round_changed.connect(_on_round_changed)
 	RoundManager.round_started.connect(_on_round_started)
@@ -290,3 +293,36 @@ func open_ship_panel(ship: Node2D):
 		ship_panel.open_for_ship(ship)
 	else:
 		ship_panel.close_panel()
+
+func _on_game_over():
+	var overlay = load("res://ui/game_end_overlay.gd").new()
+	overlay.setup_overlay(false) # false = defeat
+	add_child(overlay)
+
+func _on_game_won():
+	var overlay = load("res://ui/game_end_overlay.gd").new()
+	overlay.setup_overlay(true) # true = victory
+	add_child(overlay)
+
+var pause_overlay: Node = null
+
+func _unhandled_input(event):
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+		if GameManager.current_phase == GameManager.GamePhase.ROUND_ACTIVE or GameManager.current_phase == GameManager.GamePhase.ROUND_PREPARATION:
+			get_viewport().set_input_as_handled()
+			toggle_pause()
+
+func toggle_pause():
+	var is_paused = get_tree().paused
+	get_tree().paused = not is_paused
+	
+	if not is_paused:
+		# Open pause overlay
+		var overlay_class = load("res://ui/pause_overlay.gd")
+		pause_overlay = overlay_class.new()
+		add_child(pause_overlay)
+	else:
+		# Close pause overlay
+		if is_instance_valid(pause_overlay):
+			pause_overlay.queue_free()
+			pause_overlay = null

@@ -19,6 +19,10 @@ var current_round_start_time: float = 0.0
 var current_round_start_minerals: int = 0
 var current_round_placements_cost: int = 0
 
+var starting_capital: int = 200
+var starting_lives: int = 20
+var operations_mode: String = "Normal"
+
 var ship_types: Array = ["Scout", "Laser Frigate", "Missile Cruiser", "Pulse Beam", "Ion Cannon", "Drone Carrier", "Gravity Well"]
 
 func _ready():
@@ -102,9 +106,12 @@ func save_playthrough_report():
 	# 1. Save JSON Report
 	var json_data = {
 		"timestamp": timestamp,
+		"developer_mode": GameManager.dev_mode,
+		"operations_mode": operations_mode,
 		"total_play_time_seconds": Time.get_unix_time_from_system() - playthrough_start_time,
 		"victory": GameManager.current_phase == GameManager.GamePhase.GAME_WON,
-		"starting_capital": 200,
+		"starting_capital": starting_capital,
+		"starting_lives": starting_lives,
 		"rounds_summary": round_metrics,
 		"tower_efficiencies": tower_stats,
 		"elemental_reactions": reaction_stats
@@ -127,6 +134,14 @@ func save_playthrough_report():
 func generate_markdown_report(data: Dictionary) -> String:
 	var result = "# 📊 Playthrough Telemetry & Balance Report\n\n"
 	result += "Generated: `%s`  \n" % data["timestamp"]
+	
+	var mode_display = "NORMAL MODE 🎮"
+	if data.get("operations_mode") == "Hard":
+		mode_display = "HARD MODE 💀"
+	elif data.get("operations_mode") == "Developer":
+		mode_display = "DEVELOPER MODE 🛠️"
+		
+	result += "Mode: **%s**  \n" % mode_display
 	result += "Outcome: **%s**  \n" % ("VICTORY (All 10 Rounds Cleared) ✅" if data["victory"] else "DEFEAT (Space Station Lost) ❌")
 	result += "Total Playtime: `%d seconds`  \n\n" % data["total_play_time_seconds"]
 	
