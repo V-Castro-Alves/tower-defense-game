@@ -234,6 +234,7 @@ func _check_round_end():
 		if no_leak:
 			var bonus = current_round * 5
 			EconomyManager.add_minerals(bonus)
+			MetricsManager.record_income("Bonus", bonus)
 			
 		MetricsManager.end_round(current_round, leaks_this_round)
 		

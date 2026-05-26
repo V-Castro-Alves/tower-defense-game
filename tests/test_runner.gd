@@ -401,7 +401,7 @@ func _ready():
 		log_text += "  [PASS] Threat profiles successfully match GDD speed, tier, and element criteria\n"
 		
 	var scout_data = db_test.ship_profiles.get("Scout", {})
-	if scout_data.get("cost") != "💎 75 Minerals" or scout_data.get("range") != "1.5 Tiles (96 px)":
+	if scout_data.get("cost") != "💎 50 Minerals" or scout_data.get("range") != "1.5 Tiles (96 px)":
 		log_text += "  [FAIL] Fleet Registry profile attributes mismatched GDD specifications\n"
 		passed = false
 	else:

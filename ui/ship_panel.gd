@@ -285,6 +285,7 @@ func _on_sell_pressed():
 		
 	var refund = EconomyManager.get_sell_refund(current_ship.get_total_value())
 	EconomyManager.add_minerals(refund)
+	MetricsManager.record_income("Refund", refund)
 	MetricsManager.record_tower_sell(current_ship.ship_type)
 	
 	# Delete ship
@@ -297,6 +298,7 @@ func _on_hot_laser_pressed():
 	if EconomyManager.spend_minerals(25):
 		current_ship.laser_upgrade = "Hot"
 		current_ship.upgrades_cost += 25
+		MetricsManager.record_upgrade("HotLaser")
 		open_for_ship(current_ship) # refresh panel
 
 func _on_cold_laser_pressed():
@@ -305,6 +307,7 @@ func _on_cold_laser_pressed():
 	if EconomyManager.spend_minerals(30):
 		current_ship.laser_upgrade = "Cold"
 		current_ship.upgrades_cost += 30
+		MetricsManager.record_upgrade("ColdLaser")
 		open_for_ship(current_ship) # refresh panel
 
 func _on_optical_pressed():
@@ -313,4 +316,5 @@ func _on_optical_pressed():
 	if EconomyManager.spend_minerals(15):
 		current_ship.has_optical_targeting = true
 		current_ship.upgrades_cost += 15
+		MetricsManager.record_upgrade("OpticalTargeting")
 		open_for_ship(current_ship) # refresh panel

@@ -25,13 +25,13 @@ Placed ships can be dynamically relocated to any valid tile at any time.
 
 | Ship Type | Base Cost | Reposition Fee (15% Ceil) |
 |-----------|-----------|---------------------------|
-| **Scout** | 75 | 12 minerals |
-| **Laser Frigate** | 150 | 23 minerals |
-| **Missile Cruiser** | 220 | 33 minerals |
-| **Pulse Beam** | 300 | 45 minerals |
-| **Ion Cannon** | 450 | 68 minerals |
-| **Drone Carrier** | 550 | 83 minerals |
-| **Gravity Well** | 600 | 90 minerals |
+| **Scout** | 50 | 8 minerals |
+| **Laser Frigate** | 100 | 15 minerals |
+| **Missile Cruiser** | 140 | 21 minerals |
+| **Pulse Beam** | 180 | 27 minerals |
+| **Ion Cannon** | 250 | 38 minerals |
+| **Drone Carrier** | 320 | 48 minerals |
+| **Gravity Well** | 350 | 53 minerals |
 
 ---
 
@@ -69,13 +69,13 @@ Each active offensive ship can be configured to one of four targeting priorities
 
 | Ship | Cost | Range (tiles) | Damage | Fire Rate | Shot Type | Special / Role |
 |------|------|---------------|--------|-----------|-----------|----------------|
-| **Scout** | 75 | 1.5 | 1 tier / shot | 1.0 shot/s | Weak | Cheap early defense. Upgradable to Hot/Cold Lasers and Optical Targeting. |
-| **Laser Frigate** | 150 | 3.0 | 2 tiers / shot | 1.0 shot/s | Pierce | Pierces all path targets in a straight line. Immune to Blinding Tail. Upgradable to Hot/Cold Lasers. |
-| **Missile Cruiser** | 220 | 2.5 | 1 tier + splash | 0.8 shot/s | Weak | 1.5 tile splash damage radius. Blocked by Ring Belt and Hard Crust. |
-| **Ion Cannon** | 450 | 3.0 | 3 tiers / shot | 0.5 shot/s | Heavy | Ultimate single-target chunk killer. Breaks Hard Crust. Immune to Blinding Tail. |
-| **Drone Carrier** | 550 | 2.5 | 1 tier / drone | 0.8 shot/s per drone | Weak | Spawns 3 orbiting drones that independently target separate asteroids. Drones deal 0 damage on Meteor tier and above. |
-| **Pulse Beam** | 300 | 2.0 | 1 tier in cone | 0.5 shot/s | Kinetic | 90° cone blast. Auto-rotates to target the densest cluster. Breaks Hard Crust. Pauses Magnetic regen. |
-| **Gravity Well** | 600 | 3.0 | 0 (No damage) | 6s recharge | Gravitational | Fires a field that freezes all asteroids in range. Freeze duration scales inverse to asteroid mass. Support ship. |
+| **Scout** | 50 | 1.5 | 1 tier / shot | 1.2 shot/s | Weak | Cheap early defense. Upgradable to Hot/Cold Lasers and Optical Targeting. |
+| **Laser Frigate** | 100 | 3.0 | 2 tiers / shot | 1.0 shot/s | Pierce | Pierces all path targets in a straight line. Immune to Blinding Tail. Upgradable to Hot/Cold Lasers. |
+| **Missile Cruiser** | 140 | 2.5 | 2 tiers + splash | 1.0 shot/s | Weak | 1.5 tile splash damage radius. Blocked by Ring Belt and Hard Crust. |
+| **Ion Cannon** | 250 | 3.5 | 4 tiers / shot | 0.8 shot/s | Heavy | Ultimate single-target chunk killer. Breaks Hard Crust. Immune to Blinding Tail. |
+| **Drone Carrier** | 320 | 2.5 | 1 tier / drone | 1.0 shot/s per drone | Weak | Spawns 3 orbiting drones that independently target separate asteroids. Drones deal 0 damage on Meteor tier and above. |
+| **Pulse Beam** | 180 | 2.2 | 2 tiers in cone | 0.8 shot/s | Kinetic | 90° cone blast. Auto-rotates to target the densest cluster. Breaks Hard Crust. Pauses Magnetic regen. |
+| **Gravity Well** | 350 | 3.5 | 0 (No damage) | 4.5s recharge | Gravitational | Fires a field that freezes all asteroids in range. Freeze duration scales inverse to asteroid mass. Support ship. |
 
 ---
 
@@ -88,17 +88,17 @@ Each active offensive ship can be configured to one of four targeting priorities
 - **Strategic Placement**: Best deployed near the exit of paths to clean up small, split Pebbles/Boulders that survived heavy ships.
 
 #### 📐 Pulse Beam Rules
-- Fires a **90° cone burst** dealing 1 tier of damage to every single asteroid inside the arc simultaneously.
+- Fires a **90° cone burst** dealing 2 tiers of damage to every single asteroid inside the arc simultaneously.
 - **Auto-Rotation**: Before firing, the cone automatically sweeps and rotates to face the **densest cluster of asteroids** currently in range.
 - **Locked Blast**: Once the rotation locks and the weapon fires, the blast path is fixed. Asteroids moving into the arc mid-burst are unaffected; asteroids moving out are also unaffected once registered.
-- Uses a **2.0s recharge** cycle (0.5 shots/second). Excellent against clustered swarms; weaker against isolated targets.
+- Uses a **1.25s recharge** cycle (0.8 shots/second). Excellent against clustered swarms; weaker against isolated targets.
 
 #### 🕳️ Gravity Well Rules
 - Support-class vessel with **zero damage output**.
 - On cycle completion, pulses a gravitational field that freezes **all asteroids in range simultaneously** in their current position.
 - **Mass-scaled Duration**: Freeze duration is determined entirely by an asteroid's tier (mass). The quantity of asteroids does not dilute the freeze duration.
 - During the freeze, target asteroids are stationary, allowing all other ships in range to fire with maximum accuracy.
-- Enters a strict **6.0-second recharge** after firing, during which it is completely inactive.
+- Enters a strict **4.5-second recharge** after firing, during which it is completely inactive.
 
 **Freeze Duration Formula**:
 $$\text{Freeze Duration} = \frac{\text{Base Freeze (2.0s)}}{\text{Tier Weight}}$$

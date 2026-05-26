@@ -17,23 +17,23 @@ Asteroids do not use traditional visual health bars. Instead, **their physical s
 
 ### Splitting and HP Balance Table
 
-| Tier | Name | Hits to Split (HP) | Splits Into | Speed (px/s) | Lives Lost if Leaked |
-|------|------|--------------------|-------------|--------------|----------------------|
-| **5** | Planet Chunk | 5 | 2x Giant | 40 | 32 |
-| **4** | Giant | 4 | 2x Meteor | 60 | 16 |
-| **3** | Meteor | 3 | 2x Boulder | 90 | 8 |
-| **2** | Boulder | 2 | 2x Pebble | 130 | 4 |
-| **1** | Pebble | 1 | Destroyed | 180 | 1 |
+| Tier | Name | Hits to Split (HP) | Splits Into | Speed (px/s) | Lives Lost if Leaked | Split Mineral Reward |
+|------|------|--------------------|-------------|--------------|----------------------|----------------------|
+| **5** | Planet Chunk | 5 | 2x Giant | 40 | 12 | 16 💎 |
+| **4** | Giant | 4 | 2x Meteor | 55 | 8 | 8 💎 |
+| **3** | Meteor | 3 | 2x Boulder | 80 | 4 | 4 💎 |
+| **2** | Boulder | 2 | 2x Pebble | 110 | 2 | 2 💎 |
+| **1** | Pebble | 1 | Destroyed | 140 | 1 | 1 💎 (on death)      |
 
 ### Total Hits to Fully Clear a Spawning Chain
 Due to cascading splits, a single high-tier asteroid requires numerous cumulative shots to completely clear:
 - **Pebble**: 1 hit
-- **Boulder**: 2 (base) + 2(1) = **6 hits** to fully destroy
-- **Meteor**: 3 (base) + 2(6) = **15 hits** to fully destroy
-- **Giant**: 4 (base) + 2(15) = **34 hits** to fully destroy
-- **Planet Chunk**: 5 (base) + 2(34) = **73 hits** to fully destroy
+- **Boulder**: 2 (base) + 2(1) = **4 hits** to fully destroy
+- **Meteor**: 3 (base) + 2(4) = **11 hits** to fully destroy
+- **Giant**: 4 (base) + 2(11) = **26 hits** to fully destroy
+- **Planet Chunk**: 5 (base) + 2(26) = **57 hits** to fully destroy
 
-*Note: The split entities spawn at the exact position of the parent's destruction and inherit the standard speed for their new tier, immediately continuing along the path.*
+*Note: The split entities spawn at the exact position of the parent's destruction and inherit the standard speed for their new tier, immediately continuing along the path. Immediate split mineral rewards are granted upon fragmentation to ensure a constant stream of player capital.*
 
 ---
 

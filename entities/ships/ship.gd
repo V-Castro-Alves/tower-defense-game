@@ -55,42 +55,42 @@ func setup_type(type: String):
 	match ship_type:
 		"Scout":
 			display_name = "Scout"
-			base_cost = 75
+			base_cost = 50
 			range_tiles = 1.5
-			fire_rate = 1.0
+			fire_rate = 1.2
 			damage = 1
 			ship_color = Color("#22c55e") # Green
 		"Laser Frigate":
 			display_name = "Laser Frigate"
-			base_cost = 150
+			base_cost = 100
 			range_tiles = 3.0
 			fire_rate = 1.0
 			damage = 2
 			ship_color = Color("#06b6d4") # Cyan
 		"Missile Cruiser":
 			display_name = "Missile Cruiser"
-			base_cost = 220
+			base_cost = 140
 			range_tiles = 2.5
-			fire_rate = 0.8
-			damage = 1
+			fire_rate = 1.0
+			damage = 2
 			ship_color = Color("#a855f7") # Purple
 		"Pulse Beam":
 			display_name = "Pulse Beam"
-			base_cost = 300
-			range_tiles = 2.0
-			fire_rate = 0.5
-			damage = 1
+			base_cost = 180
+			range_tiles = 2.2
+			fire_rate = 0.8
+			damage = 2
 			ship_color = Color("#f59e0b") # Warm gold
 		"Ion Cannon":
 			display_name = "Ion Cannon"
-			base_cost = 450
-			range_tiles = 3.0
-			fire_rate = 0.5
-			damage = 3
+			base_cost = 250
+			range_tiles = 3.5
+			fire_rate = 0.8
+			damage = 4
 			ship_color = Color("#3b82f6") # Blue
 		"Drone Carrier":
 			display_name = "Drone Carrier"
-			base_cost = 550
+			base_cost = 320
 			range_tiles = 2.5
 			fire_rate = 0.8
 			damage = 1
@@ -104,9 +104,9 @@ func setup_type(type: String):
 					drones.append(drone)
 		"Gravity Well":
 			display_name = "Gravity Well"
-			base_cost = 600
-			range_tiles = 3.0
-			fire_rate = 1.0 / 6.0
+			base_cost = 350
+			range_tiles = 3.5
+			fire_rate = 1.0 / 4.5
 			damage = 0
 			ship_color = Color("#ffffff") # White
 			
@@ -473,7 +473,7 @@ func _shoot_drone(index: int, drone_target: Node2D):
 	if not is_instance_valid(drone_target):
 		return
 		
-	drone_cooldowns[index] = 1.25 # Drones fire rate 0.8 shot/s (cooldown 1.25s)
+	drone_cooldowns[index] = 1.0 # Drones fire rate 1.0 shot/s (cooldown 1.0s)
 	
 	var angle = drone_angle + (index * PI * 2.0 / 3.0)
 	var d_pos = global_position + Vector2.from_angle(angle) * 44.0

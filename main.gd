@@ -175,6 +175,7 @@ func _unhandled_input(event):
 				var cost = EconomyManager.get_reposition_fee(ship_to_reposition.base_cost)
 				if EconomyManager.spend_minerals(cost):
 					ship_to_reposition.global_position = snap_pos
+					MetricsManager.record_reposition(cost)
 					# Clear selected state and update panel
 					select_ship(ship_to_reposition)
 					_cancel_reposition()
@@ -252,13 +253,13 @@ func _spawn_placed_ship(type: String, pos: Vector2):
 
 func _get_ship_cost(type: String) -> int:
 	match type:
-		"Scout": return 75
-		"Laser Frigate": return 150
-		"Missile Cruiser": return 220
-		"Ion Cannon": return 450
-		"Drone Carrier": return 550
-		"Pulse Beam": return 300
-		"Gravity Well": return 600
+		"Scout": return 50
+		"Laser Frigate": return 100
+		"Missile Cruiser": return 140
+		"Ion Cannon": return 250
+		"Drone Carrier": return 320
+		"Pulse Beam": return 180
+		"Gravity Well": return 350
 	return 0
 
 # Called by RoundManager

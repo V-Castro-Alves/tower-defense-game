@@ -54,12 +54,12 @@ The game's high-stakes economy is balanced around tactical investments:
 
 #### 1. Rounds 1–3: The Opening Setup
 - **Financial Status**: Starting capital of **200 minerals**.
-- **Tactical Strategy**: Relies on placing high-value investments (e.g. Laser Frigates for 150 minerals, or Scouts for 75 minerals). Build early coverage near the entry/U-turn corridors to handle the swift Pebble cascades.
+- **Tactical Strategy**: Relies on placing high-value investments (e.g. Laser Frigates for 100 minerals, or Scouts for 50 minerals). Build early coverage near the entry/U-turn corridors to handle the swift Pebble cascades.
 
 #### 2. Rounds 4–6: The Fleet Expands
 - **Financial Status**: Strong. Swarm clear rates yield high payouts from boulder splits.
-- **Tactical Strategy**: Deploy Missile Cruisers (220 minerals) and Pulse Beams (300 minerals) to handle high-density armored swarms. Purchase **Hot/Cold Laser upgrades** on active Scouts to prepare for elemental threats.
+- **Tactical Strategy**: Deploy Missile Cruisers (140 minerals) and Pulse Beams (180 minerals) to handle high-density armored swarms. Purchase **Hot/Cold Laser upgrades** on active Scouts to prepare for elemental threats.
 
 #### 3. Rounds 7–10: High Orbit Defenses
 - **Financial Status**: Peak economy. Large mineral cascades.
-- **Tactical Strategy**: Deploy the ultimate single-target **Ion Cannons** (450 minerals) to melt Giants. Build **Gravity Wells** (600 minerals) at corridor bends. Purchase **Optical Targeting** upgrades on Scouts to counter Blinding Tails.
+- **Tactical Strategy**: Deploy the ultimate single-target **Ion Cannons** (250 minerals) to melt Giants. Build **Gravity Wells** (350 minerals) at corridor bends. Purchase **Optical Targeting** upgrades on Scouts to counter Blinding Tails.

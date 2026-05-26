@@ -34,6 +34,20 @@ Logs total instances of reactions triggered:
 - `Solidify` (Lava + Cold Laser)
 - `Overload` (Lava + Hot Laser)
 
+### 4. Advanced Tactical & Balance Telemetry
+Added in v0.5 v4 to facilitate deep strategic balance diagnostics:
+- **Upgrades & Repositionings**:
+  - `upgrades_purchased`: Tracks count of purchases for `HotLaser`, `ColdLaser`, and `OpticalTargeting` upgrades.
+  - `repositioning_events`: Count of dynamic ship relocation events.
+  - `repositioning_fees_spent`: Total minerals spent on relocation fees.
+- **Variant Shielding Mitigations**:
+  - `damage_absorbed`: Weak damage hits absorbed by *Hard Crust* armor blocks.
+  - `damage_deflected`: Projectile or splash damage deflected by *Ring Belt* debris or *Drone Carrier* density lockouts.
+- **Economic Income Source Breakdown**:
+  - `income_sources`: Splits total mineral earnings by transaction type: `Kill` (complete Pebble/Boulder kills), `Split` (immediate split rewards), `Bonus` (no-leak clear rewards), and `Refund` (selling ships).
+- **Leaked Threats Breakdown**:
+  - `leaks_breakdown`: Tracks the count of leaked threats mapped by their specific tier (e.g. `Pebble`, `Giant`) and active variant (e.g. `Magnetic Core`, `Hard Crust`) to diagnose security breaches.
+
 ---
 
 ## 💾 Storage & Serialization

@@ -43,26 +43,26 @@ func setup_tier(t: int):
 	match current_tier:
 		5:
 			speed = 40.0
-			lives_on_leak = 32
+			lives_on_leak = 12
 			size = 64.0
 			color = Color("#7f1d1d") # Dark Red
 		4:
-			speed = 60.0
-			lives_on_leak = 16
+			speed = 55.0
+			lives_on_leak = 8
 			size = 48.0
 			color = Color("#dc2626") # Red
 		3:
-			speed = 90.0
-			lives_on_leak = 8
+			speed = 80.0
+			lives_on_leak = 4
 			size = 36.0
 			color = Color("#ea580c") # Orange
 		2:
-			speed = 130.0
-			lives_on_leak = 4
+			speed = 110.0
+			lives_on_leak = 2
 			size = 24.0
 			color = Color("#f97316") # Light Orange
 		1:
-			speed = 180.0
+			speed = 140.0
 			lives_on_leak = 1
 			size = 16.0
 			color = Color("#eab308") # Yellow
@@ -142,6 +142,7 @@ func _process(delta):
 		# Leak asteroid
 		GameManager.lose_lives(lives_on_leak)
 		RoundManager.register_leak()
+		MetricsManager.record_leak_threat(get_tier_name(current_tier), variant)
 		RoundManager.register_asteroid_removed()
 		queue_free()
 
@@ -173,14 +174,17 @@ func take_damage(amount: int, shot_type: String = "Weak", source_ship: String = 
 		
 	# Drone Carrier lockout rule: drones deal 0 damage to tier 3+ base asteroids
 	if shot_type == "Drone" and current_tier >= 3:
+		MetricsManager.record_mitigation("deflected", amount)
 		return
 		
 	# Hard Crust variant rule: absorbs weak shots (Scout, Splash, Drone)
 	if variant == "Hard Crust" and (shot_type == "Weak" or shot_type == "Splash" or shot_type == "Drone"):
+		MetricsManager.record_mitigation("absorbed", amount)
 		return
 		
 	# Ring Belt variant rule: deflects splash/AoE and drone strikes
 	if variant == "Ring Belt" and (shot_type == "Splash" or shot_type == "Drone"):
+		MetricsManager.record_mitigation("deflected", amount)
 		return
 		
 	# Lava Solidification: Cold Laser cools molten exterior, deals 0 damage, converts to neutral
@@ -243,19 +247,25 @@ func take_damage(amount: int, shot_type: String = "Weak", source_ship: String = 
 			# Entirely destroyed
 			if current_tier == 1:
 				EconomyManager.add_minerals(1)
+				MetricsManager.record_income("Kill", 1)
 			elif current_tier == 2:
 				# Destroyed Boulder completely (worth 4 minerals)
 				EconomyManager.add_minerals(4)
+				MetricsManager.record_income("Kill", 4)
 			else:
 				# Destroys bigger ones completely (adds full equivalent value)
-				EconomyManager.add_minerals(get_mineral_value(current_tier))
+				var val = get_mineral_value(current_tier)
+				EconomyManager.add_minerals(val)
+				MetricsManager.record_income("Kill", val)
 				
 			RoundManager.register_asteroid_removed()
 			queue_free()
 		else:
-			# Boulder splits award 2 minerals
-			if current_tier == 2:
-				EconomyManager.add_minerals(2)
+			# Award minerals based on splitting tier
+			var split_bonus = get_split_reward(current_tier)
+			if split_bonus > 0:
+				EconomyManager.add_minerals(split_bonus)
+				MetricsManager.record_income("Split", split_bonus)
 				
 			# Spawn two children staggered on path, propagating variant and elemental types
 			for main in get_tree().get_nodes_in_group("main"):
@@ -274,3 +284,20 @@ func get_mineral_value(tier: int) -> int:
 		2: return 4
 		1: return 1
 	return 0
+
+func get_split_reward(tier: int) -> int:
+	match tier:
+		5: return 16
+		4: return 8
+		3: return 4
+		2: return 2
+	return 0
+
+func get_tier_name(tier: int) -> String:
+	match tier:
+		5: return "Planet Chunk"
+		4: return "Giant"
+		3: return "Meteor"
+		2: return "Boulder"
+		1: return "Pebble"
+	return "Unknown"

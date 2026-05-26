@@ -14,6 +14,37 @@ var reaction_stats: Dictionary = {
 	"Overload": 0
 }
 
+# New Balance & Telemetry tracking variables
+var upgrades_purchased: Dictionary = {
+	"HotLaser": 0,
+	"ColdLaser": 0,
+	"OpticalTargeting": 0
+}
+var repositioning_events: int = 0
+var repositioning_fees_spent: int = 0
+
+var leaks_breakdown: Dictionary = {
+	"Pebble": 0,
+	"Boulder": 0,
+	"Meteor": 0,
+	"Giant": 0,
+	"Planet Chunk": 0,
+	"Hard Crust": 0,
+	"Magnetic Core": 0,
+	"Ring Belt": 0,
+	"Blinding Tail": 0
+}
+
+var damage_absorbed: int = 0
+var damage_deflected: int = 0
+
+var income_sources: Dictionary = {
+	"Kill": 0,
+	"Split": 0,
+	"Bonus": 0,
+	"Refund": 0
+}
+
 # Current round logging helper
 var current_round_start_time: float = 0.0
 var current_round_start_minerals: int = 0
@@ -45,9 +76,59 @@ func reset_metrics():
 		"Solidify": 0,
 		"Overload": 0
 	}
+	upgrades_purchased = {
+		"HotLaser": 0,
+		"ColdLaser": 0,
+		"OpticalTargeting": 0
+	}
+	repositioning_events = 0
+	repositioning_fees_spent = 0
+	leaks_breakdown = {
+		"Pebble": 0,
+		"Boulder": 0,
+		"Meteor": 0,
+		"Giant": 0,
+		"Planet Chunk": 0,
+		"Hard Crust": 0,
+		"Magnetic Core": 0,
+		"Ring Belt": 0,
+		"Blinding Tail": 0
+	}
+	damage_absorbed = 0
+	damage_deflected = 0
+	income_sources = {
+		"Kill": 0,
+		"Split": 0,
+		"Bonus": 0,
+		"Refund": 0
+	}
 	current_round_start_time = 0.0
 	current_round_start_minerals = 0
 	current_round_placements_cost = 0
+
+func record_upgrade(upgrade_type: String):
+	if upgrades_purchased.has(upgrade_type):
+		upgrades_purchased[upgrade_type] += 1
+
+func record_reposition(fee: int):
+	repositioning_events += 1
+	repositioning_fees_spent += fee
+
+func record_leak_threat(tier_name: String, variant_name: String):
+	if leaks_breakdown.has(tier_name):
+		leaks_breakdown[tier_name] += 1
+	if variant_name != "None" and leaks_breakdown.has(variant_name):
+		leaks_breakdown[variant_name] += 1
+
+func record_mitigation(mitigation_type: String, amount: int):
+	if mitigation_type == "absorbed":
+		damage_absorbed += amount
+	elif mitigation_type == "deflected":
+		damage_deflected += amount
+
+func record_income(source: String, amount: int):
+	if income_sources.has(source):
+		income_sources[source] += amount
 
 func start_round(round_num: int):
 	current_round_start_time = Time.get_unix_time_from_system()
@@ -114,7 +195,14 @@ func save_playthrough_report():
 		"starting_lives": starting_lives,
 		"rounds_summary": round_metrics,
 		"tower_efficiencies": tower_stats,
-		"elemental_reactions": reaction_stats
+		"elemental_reactions": reaction_stats,
+		"upgrades_purchased": upgrades_purchased,
+		"repositioning_events": repositioning_events,
+		"repositioning_fees_spent": repositioning_fees_spent,
+		"leaks_breakdown": leaks_breakdown,
+		"damage_absorbed": damage_absorbed,
+		"damage_deflected": damage_deflected,
+		"income_sources": income_sources
 	}
 	
 	var json_path = "res://metrics/playthrough_report_" + timestamp + ".json"
@@ -170,5 +258,38 @@ func generate_markdown_report(data: Dictionary) -> String:
 	for reaction in data["elemental_reactions"].keys():
 		result += "| %s | %d |\n" % [reaction, data["elemental_reactions"][reaction]]
 		
+	# Tactical Upgrades & Repositioning
+	result += "\n## 🔧 Upgrades & Repositioning Telemetry\n\n"
+	result += "- **Hot Lasers Purchased**: %d\n" % data.get("upgrades_purchased", {}).get("HotLaser", 0)
+	result += "- **Cold Lasers Purchased**: %d\n" % data.get("upgrades_purchased", {}).get("ColdLaser", 0)
+	result += "- **Optical Targetings Purchased**: %d\n" % data.get("upgrades_purchased", {}).get("OpticalTargeting", 0)
+	result += "- **Repositioning Events**: %d\n" % data.get("repositioning_events", 0)
+	result += "- **Total Repositioning Fees Spent**: %d 💎\n" % data.get("repositioning_fees_spent", 0)
+	
+	# Damage Shielding Mitigations
+	result += "\n## 🛡️ Variant Shielding Mitigations\n\n"
+	result += "- **Weak Damage Absorbed (Hard Crust)**: %d HP\n" % data.get("damage_absorbed", 0)
+	result += "- **Splash/Drone Damage Deflected (Ring Belt)**: %d HP\n" % data.get("damage_deflected", 0)
+	
+	# Income Sources
+	result += "\n## 💎 Economic Income Source Breakdown\n\n"
+	result += "| Income Source | Total Earnings |\n"
+	result += "|---|---|\n"
+	var inc = data.get("income_sources", {})
+	result += "| Pebble Death / Complete Kills | %d 💎 |\n" % inc.get("Kill", 0)
+	result += "| Asteroid Splits | %d 💎 |\n" % inc.get("Split", 0)
+	result += "| No-Leak Clean Clear Bonus | %d 💎 |\n" % inc.get("Bonus", 0)
+	result += "| Placed Ship Sell Refunds | %d 💎 |\n" % inc.get("Refund", 0)
+	
+	# Leaked threat breakdown
+	result += "\n## ☄️ Leaked Threats Breakdown\n\n"
+	result += "| Threat Tier / Variant | Leaked Count |\n"
+	result += "|---|---|\n"
+	var l_brk = data.get("leaks_breakdown", {})
+	for k in ["Pebble", "Boulder", "Meteor", "Giant", "Planet Chunk", "Hard Crust", "Magnetic Core", "Ring Belt", "Blinding Tail"]:
+		var val = l_brk.get(k, 0)
+		if val > 0:
+			result += "| %s | %d |\n" % [k, val]
+			
 	result += "\n---\n*Space Defenders Telemetry Engine - Data Logged for Balance Optimization.* 🌌"
 	return result
